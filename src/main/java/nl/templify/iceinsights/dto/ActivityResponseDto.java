@@ -7,5 +7,5 @@ import java.util.List;
 @Data
 public class ActivityResponseDto {
     private List<ActivityDto> activities;
-    // mogelijk andere velden zoals totalCount, etc.
+    private Integer activityCount;
 }

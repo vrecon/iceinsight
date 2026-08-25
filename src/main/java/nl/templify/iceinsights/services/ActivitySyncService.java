@@ -27,7 +27,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ActivitySyncService {
 
-    private static final String API_BASE_URL = "https://practice-api.speedhive.com/api/v1/training/activities/%d/sessions";
+    private static final String SESSIONS_PATH = "/api/v1/training/activities/{id}/sessions";
 
     private final UserRepository userRepository;
     private final ActivityRepository activityRepository;
@@ -55,11 +55,10 @@ public class ActivitySyncService {
     private void fetchAndSaveActivityDetails(Activity activity) {
         log.info("Fetching details for activity: {}", activity.getId());
 
-        String path = String.format(API_BASE_URL, activity.getId());
         try {
             ActivityDetailsResponse details = webClient
                     .get()
-                    .uri(path)
+                    .uri(SESSIONS_PATH, activity.getId())
                     .retrieve()
                     .bodyToMono(ActivityDetailsResponse.class)
                     .block();
