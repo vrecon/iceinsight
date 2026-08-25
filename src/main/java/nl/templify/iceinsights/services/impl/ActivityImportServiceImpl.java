@@ -1,116 +1,158 @@
 package nl.templify.iceinsights.services.impl;
 
-import jakarta.transaction.Transactional;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import nl.templify.iceinsights.domain.Activity;
 import nl.templify.iceinsights.dto.ActivityDto;
 import nl.templify.iceinsights.dto.ActivityResponseDto;
-import nl.templify.iceinsights.mapper.ActivityMapper;
 import nl.templify.iceinsights.repositories.ActivityRepository;
 import nl.templify.iceinsights.services.ActivityImportService;
 import nl.templify.iceinsights.services.ChipService;
-import org.springframework.boot.web.client.RestTemplateBuilder;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StreamUtils;
-import org.springframework.web.client.RestTemplate;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.support.TransactionTemplate;
 import org.springframework.web.reactive.function.client.WebClient;
+import reactor.core.publisher.Mono;
 
-import java.nio.charset.StandardCharsets;
-import java.time.Duration;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @Slf4j
-@RequiredArgsConstructor
 public class ActivityImportServiceImpl implements ActivityImportService {
 
     private static final String API_PATH = "/api/v1/locations/%d/activities";
     private static final int BATCH_SIZE = 200;
+    private static final int DEFAULT_MAX = 500;
+    private static final long BATCH_PAUSE_MS = 500L;
 
     private final WebClient webClient;
     private final ActivityRepository activityRepository;
     private final ChipService chipService;
-    private final ActivityMapper activityMapper;
+    private final TransactionTemplate transactionTemplate;
+
+    public ActivityImportServiceImpl(WebClient webClient,
+                                     ActivityRepository activityRepository,
+                                     ChipService chipService,
+                                     PlatformTransactionManager transactionManager) {
+        this.webClient = webClient;
+        this.activityRepository = activityRepository;
+        this.chipService = chipService;
+        this.transactionTemplate = new TransactionTemplate(transactionManager);
+    }
 
     @Override
-    @Transactional
-    public void importActivities(Long locationId) {
+    public int importActivities(Long locationId, Integer year, Integer max) {
+        int maxToImport = (max == null || max < 1) ? DEFAULT_MAX : max;
         int offset = 0;
         int totalImported = 0;
-        boolean hasMoreData = true;
+        Integer activityCount = null;
 
-        while (hasMoreData && offset < 30000) {
-            try {
-                List<ActivityDto> activities = fetchActivitiesBatch(locationId, offset);
+        while (totalImported < maxToImport) {
+            int remaining = maxToImport - totalImported;
+            int count = Math.min(BATCH_SIZE, remaining);
+            ActivityResponseDto response = fetchActivitiesResponse(locationId, offset, year, count);
+            if (activityCount == null && response.getActivityCount() != null) {
+                activityCount = response.getActivityCount();
+                log.info("Speedhive reported activityCount={} for location {} (year={})",
+                        activityCount, locationId, year);
+            }
 
-                if (activities.isEmpty()) {
-                    hasMoreData = false;
-                    log.info("No more activities to import. Total imported: {}", totalImported);
-                    break;
+            List<ActivityDto> activities = response.getActivities() != null
+                    ? response.getActivities()
+                    : Collections.emptyList();
+
+            if (activities.size() > remaining) {
+                activities = List.copyOf(activities.subList(0, remaining));
+            }
+
+            if (activities.isEmpty()) {
+                log.info("No more activities to import. Saved {} of {} for location {} (year={}, max={})",
+                        totalImported, activityCount, locationId, year, maxToImport);
+                break;
+            }
+
+            saveActivities(activities, locationId);
+
+            totalImported += activities.size();
+            offset += activities.size();
+
+            log.info("Imported batch of {} activities. Saved {} of {} for location {} (year={}, max={})",
+                    activities.size(), totalImported, activityCount, locationId, year, maxToImport);
+
+            if (activities.size() < count) {
+                log.info("Last page received ({} < {}). Stopping.", activities.size(), count);
+                break;
+            }
+
+            if (totalImported < maxToImport) {
+                try {
+                    Thread.sleep(BATCH_PAUSE_MS);
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                    throw new RuntimeException("Activity import interrupted", e);
                 }
-
-                saveActivities(activities,locationId);
-
-                totalImported += activities.size();
-                offset += BATCH_SIZE;
-
-                log.info("Imported batch of {} activities. Total imported so far: {}",
-                        activities.size(), totalImported);
-
-                Thread.sleep(500);
-
-            } catch (Exception e) {
-                log.error("Error importing activities at offset {}: {}", offset, e.getMessage());
-                throw new RuntimeException("Failed to import activities", e);
             }
         }
+
+        log.info("Import finished. Saved {} of {} activities for location {} (year={}, max={})",
+                totalImported, activityCount, locationId, year, maxToImport);
+        return totalImported;
     }
 
-    @Override
-    public List<ActivityDto> fetchActivitiesBatch(Long locationId, int offset) {
+    ActivityResponseDto fetchActivitiesResponse(Long locationId, int offset, Integer year, int count) {
         String path = String.format(API_PATH, locationId);
+        log.info("Fetching activities from path={} count={} offset={} year={}", path, count, offset, year);
 
-        log.info("Fetching activities from path: {}", path);
-
-        return webClient
+        ActivityResponseDto response = webClient
                 .get()
-                .uri(uriBuilder -> uriBuilder
-                        .path(path)
-                        .queryParam("count", BATCH_SIZE)
-                        .queryParam("offset", offset)
-                        .build())
+                .uri(uriBuilder -> {
+                    uriBuilder.path(path)
+                            .queryParam("count", count)
+                            .queryParam("offset", offset);
+                    if (year != null) {
+                        uriBuilder.queryParam("year", year);
+                    }
+                    return uriBuilder.build();
+                })
                 .retrieve()
+                .onStatus(HttpStatusCode::isError, clientResponse ->
+                        clientResponse.bodyToMono(String.class)
+                                .defaultIfEmpty("")
+                                .flatMap(body -> {
+                                    log.error("Speedhive HTTP {} for location {} offset {}: {}",
+                                            clientResponse.statusCode(), locationId, offset, body);
+                                    return Mono.error(new RuntimeException(
+                                            "Speedhive API request failed: HTTP "
+                                                    + clientResponse.statusCode() + " " + body));
+                                }))
                 .bodyToMono(ActivityResponseDto.class)
-                .map(response -> {
-                    log.info("Received {} activities", response.getActivities().size());
-                    return response.getActivities();
-                })
                 .block();
+
+        if (response == null) {
+            ActivityResponseDto empty = new ActivityResponseDto();
+            empty.setActivities(Collections.emptyList());
+            return empty;
+        }
+        return response;
     }
 
-    @Transactional
-    protected void saveActivities(List<ActivityDto> activities, Long locationId) {
-        activities.stream()
-                .map(dto -> {
-                    Long chipId = chipService.getOrCreateChipId(dto.getChipCode(), dto.getChipLabel());
-                    return Activity.builder()
-                            .id(dto.getId())
-                            .name(dto.getName())
-                            .startTime(dto.getStartTime())
-                            .endTime(dto.getEndTime())
-                            .locationId(locationId)
-                            .chipId(chipId)
-                            .build();
-                })
-                .forEach(activityRepository::save);
+    private void saveActivities(List<ActivityDto> activities, Long locationId) {
+        transactionTemplate.executeWithoutResult(status -> {
+            List<Activity> entities = activities.stream()
+                    .map(dto -> {
+                        Long chipId = chipService.getOrCreateChipId(dto.getChipCode(), dto.getChipLabel());
+                        return Activity.builder()
+                                .id(dto.getId())
+                                .name(dto.getName())
+                                .startTime(dto.getStartTime())
+                                .endTime(dto.getEndTime())
+                                .locationId(locationId)
+                                .chipId(chipId)
+                                .build();
+                    })
+                    .toList();
+            activityRepository.saveAll(entities);
+        });
     }
-
 }
