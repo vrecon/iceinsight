@@ -1,11 +1,14 @@
 package nl.templify.iceinsights.services;
 
-import jakarta.transaction.Transactional;
-import nl.templify.iceinsights.dto.ActivityDto;
-
-import java.util.List;
-
 public interface ActivityImportService {
-    void importActivities(Long locationId);
-    List<ActivityDto> fetchActivitiesBatch(Long locationId, int offset);
+
+    /**
+     * Import practice activities for a Speedhive location.
+     *
+     * @param locationId Speedhive location id
+     * @param year       year filter; {@code null} means no year filter
+     * @param max        maximum rows to save; {@code null} or &lt; 1 is treated as 500
+     * @return number of activities saved
+     */
+    int importActivities(Long locationId, Integer year, Integer max);
 }
