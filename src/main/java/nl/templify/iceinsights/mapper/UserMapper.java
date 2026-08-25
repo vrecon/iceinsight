@@ -9,6 +9,7 @@ import java.util.List;
 
 @Mapper(componentModel = "spring", uses = {ChipMapper.class})
 public interface UserMapper {
+    @Mapping(target = "password", ignore = true)
     UserDto toDto(User user);
     
     @Mapping(target = "chips", ignore = true)  // We handelen chips apart af

@@ -34,6 +34,9 @@ public class User implements UserDetails {
     
     @Column(nullable = false, unique = true)
     private String username;
+
+    @Column(unique = true)
+    private String email;
     
     @Column(nullable = false)
     private String password;
@@ -47,6 +50,7 @@ public class User implements UserDetails {
         joinColumns = @JoinColumn(name = "user_id"),
         inverseJoinColumns = @JoinColumn(name = "chip_id")
     )
+    @Builder.Default
     private Set<Chip> chips = new HashSet<>();
     
     @PrePersist
@@ -61,12 +65,12 @@ public class User implements UserDetails {
 
     @Override
     public boolean isAccountNonExpired() {
-        return false;
+        return true;
     }
 
     @Override
     public boolean isAccountNonLocked() {
-        return false;
+        return true;
     }
 
     @Override
