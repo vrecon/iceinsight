@@ -21,7 +21,7 @@ import static org.junit.jupiter.api.Assertions.assertSame;
 
 class ActivityDetailsMapperTest {
 
-    private final ActivityDetailsMapper mapper = new ActivityDetailsMapper();
+    private final ActivityDetailsMapper mapper = new ActivityDetailsMapperImpl();
 
     @Test
     void mapToEntities_persistsActivityStatsOnTheSession() {
