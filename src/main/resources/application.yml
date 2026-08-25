@@ -24,8 +24,8 @@ spring:
                 format_sql: true
                 default_schema: public
                 jdbc:
-                    batch_size: 50          # Voor efficiënte bulk operaties
-                    fetch_size: 50          # Voor efficiënt ophalen van grote datasets
+                    batch_size: 50          # Voor efficiÃ«nte bulk operaties
+                    fetch_size: 50          # Voor efficiÃ«nt ophalen van grote datasets
                 order_inserts: true
                 order_updates: true
                 connection:
@@ -36,6 +36,17 @@ spring:
         change-log: classpath:db/changelog/db.changelog-master.yaml
         enabled: true
         default-schema: public
+    mail:
+        host: ${MAIL_HOST:}
+        port: ${MAIL_PORT:587}
+        username: ${MAIL_USERNAME:}
+        password: ${MAIL_PASSWORD:}
+        properties:
+            mail:
+                smtp:
+                    auth: true
+                    starttls:
+                        enable: true
 server:
     port: 8086
 logging:
@@ -60,3 +71,6 @@ application:
             expiration: 86400000 # een dag
             refresh-token:
                 expiration: 604800000 # 7 dagen
+
+frontend:
+    base-url: ${FRONTEND_BASE_URL:http://localhost:3000}
