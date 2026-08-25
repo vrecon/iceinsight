@@ -1,0 +1,308 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1
+      author: claude
+      changes:
+        - createTable:
+            tableName: location
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: name
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: url
+                  type: varchar(255)
+              - column:
+                  name: track_length
+                  type: int
+              - column:
+                  name: country
+                  type: varchar(2)
+              - column:
+                  name: x2_service_id
+                  type: bigint
+
+  - changeSet:
+      id: create-user-sequence
+      author: claude
+      changes:
+        - createSequence:
+            sequenceName: user_seq
+            incrementBy: 1
+            startValue: 1
+
+  - changeSet:
+      id: create-user-table
+      author: claude
+      changes:
+        - createTable:
+            tableName: users
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  defaultValueSequenceNext: user_seq
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: first_name
+                  type: varchar(100)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: middle_name
+                  type: varchar(100)
+              - column:
+                  name: last_name
+                  type: varchar(100)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: username
+                  type: varchar(50)
+                  constraints:
+                    nullable: false
+                    unique: true
+              - column:
+                  name: password
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: created_at
+                  type: timestamp
+                  defaultValueComputed: CURRENT_TIMESTAMP
+                  constraints:
+                    nullable: false
+
+  - changeSet:
+      id: 3
+      author: claude
+      changes:
+        - createSequence:
+            sequenceName: chip_seq
+            incrementBy: 1
+            startValue: 1
+        - createTable:
+            tableName: chip
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  defaultValueSequenceNext: chip_seq
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: chip_code
+                  type: varchar(50)
+                  constraints:
+                    nullable: false
+                    unique: true
+              - column:
+                  name: chip_label
+                  type: varchar(255)
+              - column:
+                  name: status
+                  type: varchar(20)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: valid_until
+                  type: timestamp
+                  constraints:
+                    nullable: true
+              - column:
+                  name: created_at
+                  type: timestamp
+                  defaultValueComputed: CURRENT_TIMESTAMP
+                  constraints:
+                    nullable: false
+              - column:
+                  name: user_id
+                  type: bigint
+
+
+  - changeSet:
+      id: 4
+      author: claude
+      changes:
+        - createTable:
+            tableName: activity
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: name
+                  type: varchar(50)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: start_time
+                  # Postgres specifiek: gebruik timestamptz voor betere tijdzone ondersteuning
+                  type: timestamptz(0)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: end_time
+                  type: timestamptz(0)
+              - column:
+                  name: location_id
+                  type: bigint
+
+              - column:
+                  name: chip_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_activity_chip
+                    references: chip(id)
+
+        # BRIN index is efficiënter voor timestamp ranges in Postgres
+        - createIndex:
+            indexName: idx_activity_start_time
+            tableName: activity
+            columns:
+              - column:
+                  name: start_time
+            # Postgres-specific SQL
+            sql: CREATE INDEX idx_activity_start_time ON activity USING BRIN (start_time)
+
+        # Combined B-tree index voor location queries
+        - createIndex:
+            indexName: idx_activity_location_start
+            tableName: activity
+            columns:
+              - column:
+                  name: location_id
+              - column:
+                  name: start_time
+
+  # Postgres-specifieke optimalisaties
+  - changeSet:
+      id: 5
+      author: claude
+      changes:
+        # Voeg table partitioning toe voor grote datasets
+        - sql:
+            sql: |
+              ALTER TABLE activity SET (
+                autovacuum_vacuum_scale_factor = 0.05,
+                autovacuum_analyze_scale_factor = 0.02
+              );
+  - changeSet:
+      id: 6
+      author: claude
+      changes:
+        - createIndex:
+            indexName: idx_chip_user
+            tableName: chip
+            columns:
+              - column:
+                  name: user_id
+        - createIndex:
+            indexName: idx_activity_location
+            tableName: activity
+            columns:
+              - column:
+                  name: location_id
+        - createIndex:
+            indexName: idx_activity_chip
+            tableName: activity
+            columns:
+              - column:
+                  name: chip_id
+  - changeSet:
+      id: create-user-chips-table
+      author: claude
+      changes:
+        - createTable:
+            tableName: user_chips
+            columns:
+              - column:
+                  name: user_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_user_chips_user
+                    references: users(id)
+              - column:
+                  name: chip_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_user_chips_chip
+                    references: chip(id)
+        - addPrimaryKey:
+            tableName: user_chips
+            columnNames: user_id, chip_id
+            constraintName: pk_user_chips
+        - createIndex:
+            indexName: idx_user_chips_user
+            tableName: user_chips
+            columns:
+              - column:
+                  name: user_id
+        - createIndex:
+            indexName: idx_user_chips_chip
+            tableName: user_chips
+            columns:
+              - column:
+                  name: chip_id
+  - changeSet:
+      id: create-refresh-token-table
+      author: claude
+      changes:
+        - createSequence:
+            sequenceName: refresh_token_seq
+            incrementBy: 1
+            startValue: 1
+            cache: 1
+        - createTable:
+            tableName: refresh_tokens
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  defaultValueSequenceNext: refresh_token_seq
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: token
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+                    unique: true
+              - column:
+                  name: user_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_refresh_token_user
+                    references: users(id)
+              - column:
+                  name: expiry_date
+                  type: timestamp
+                  constraints:
+                    nullable: false
+        - createIndex:
+            indexName: idx_refresh_token_token
+            tableName: refresh_tokens
+            columns:
+              - column:
+                  name: token
+            unique: true

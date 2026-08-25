@@ -1,0 +1,62 @@
+
+spring:
+    application:
+        name: IceInsights
+
+    datasource:
+        url: jdbc:postgresql://localhost:5432/ice_insights
+        username: postgres
+        password: postgres
+        driver-class-name: org.postgresql.Driver
+        hikari:
+            minimum-idle: 5
+            maximum-pool-size: 20
+            idle-timeout: 300000        # 5 minuten
+            max-lifetime: 1200000       # 20 minuten
+            connection-timeout: 20000   # 20 seconden
+            pool-name: IceInsightsPool
+    jpa:
+        database-platform: org.hibernate.dialect.PostgreSQLDialect
+        hibernate:
+            ddl-auto: validate  # Belangrijk: we gebruiken Liquibase voor schema beheer
+        properties:
+            hibernate:
+                format_sql: true
+                default_schema: public
+                jdbc:
+                    batch_size: 50          # Voor efficiënte bulk operaties
+                    fetch_size: 50          # Voor efficiënt ophalen van grote datasets
+                order_inserts: true
+                order_updates: true
+                connection:
+                    characterEncoding: utf8
+                    charSet: UTF-8
+                    useUnicode: true
+    liquibase:
+        change-log: classpath:db/changelog/db.changelog-master.yaml
+        enabled: true
+        default-schema: public
+server:
+    port: 8086
+logging:
+    level:
+        org.springframework.web.client.RestTemplate: DEBUG
+        nl.templify.iceinsights: DEBUG
+
+springdoc:
+    api-docs:
+        path: /api-docs
+    swagger-ui:
+        path: /swagger-ui.html
+        operationsSorter: method
+        tagsSorter: alpha
+        display-request-duration: true
+    show-actuator: false
+
+application:
+    security:
+        jwt:
+            secret-key: 404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970
+            expiration: 86400000 # een dag
+            refresh-token:
+                expiration: 604800000 # 7 dagen

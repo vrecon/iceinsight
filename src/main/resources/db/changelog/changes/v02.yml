@@ -1,0 +1,198 @@
+databaseChangeLog:
+  - changeSet:
+      id: create-sequences
+      author: claude
+      changes:
+        - createSequence:
+            sequenceName: lap_seq
+            incrementBy: 1
+            startValue: 1
+        - createSequence:
+            sequenceName: session_stats_seq
+            incrementBy: 1
+            startValue: 1
+  - changeSet:
+      id: create-sessions-table
+      author: claude
+      changes:
+        - createTable:
+            tableName: sessions
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: activity_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_session_activity
+                    references: activity(id)
+              - column:
+                  name: chip_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+              - column:
+                  name: datetime_start
+                  type: timestamp
+                  constraints:
+                    nullable: false
+              - column:
+                  name: best_lap_nr
+                  type: integer
+              - column:
+                  name: best_lap_duration
+                  type: varchar(20)
+              - column:
+                  name: best_lap_speed_kph
+                  type: decimal(10,2)
+              - column:
+                  name: best_lap_speed_mps
+                  type: decimal(10,2)
+              - column:
+                  name: ave_lap_duration
+                  type: varchar(20)
+              - column:
+                  name: median_lap_duration
+                  type: varchar(20)
+              - column:
+                  name: duration
+                  type: varchar(20)
+
+  - changeSet:
+      id: create-laps-table
+      author: claude
+      changes:
+        - createTable:
+            tableName: laps
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  defaultValueSequenceNext: lap_seq
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: session_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_lap_session
+                    references: sessions(id)
+              - column:
+                  name: lap_nr
+                  type: integer
+                  constraints:
+                    nullable: false
+              - column:
+                  name: datetime_start
+                  type: timestamp
+                  constraints:
+                    nullable: false
+              - column:
+                  name: duration
+                  type: varchar(20)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: speed_kph
+                  type: decimal(10,2)
+              - column:
+                  name: speed_mps
+                  type: decimal(10,2)
+              - column:
+                  name: diff_prev_lap
+                  type: varchar(20)
+              - column:
+                  name: session_duration
+                  type: varchar(20)
+              - column:
+                  name: status
+                  type: varchar(20)
+
+  - changeSet:
+      id: create-session-stats-table
+      author: claude
+      changes:
+        - createTable:
+            tableName: session_stats
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  defaultValueSequenceNext: session_stats_seq
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: session_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_stats_session
+                    references: sessions(id)
+                    unique: true
+              - column:
+                  name: lap_count
+                  type: integer
+              - column:
+                  name: fastest_time
+                  type: varchar(20)
+              - column:
+                  name: average_time
+                  type: varchar(20)
+              - column:
+                  name: median_time
+                  type: varchar(20)
+              - column:
+                  name: total_training_time
+                  type: varchar(20)
+              - column:
+                  name: active_training_time
+                  type: varchar(20)
+              - column:
+                  name: average_speed_kph
+                  type: decimal(10,2)
+              - column:
+                  name: average_speed_mps
+                  type: decimal(10,2)
+              - column:
+                  name: fastest_speed_kph
+                  type: decimal(10,2)
+              - column:
+                  name: fastest_speed_mps
+                  type: decimal(10,2)
+
+  - changeSet:
+      id: create-indices
+      author: claude
+      changes:
+        - createIndex:
+            indexName: idx_session_activity
+            tableName: sessions
+            columns:
+              - column:
+                  name: activity_id
+        - createIndex:
+            indexName: idx_lap_session
+            tableName: laps
+            columns:
+              - column:
+                  name: session_id
+        - createIndex:
+            indexName: idx_lap_number
+            tableName: laps
+            columns:
+              - column:
+                  name: lap_nr
+        - createIndex:
+            indexName: idx_lap_datetime
+            tableName: laps
+            columns:
+              - column:
+                  name: datetime_start
