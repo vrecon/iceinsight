@@ -16,7 +16,9 @@ import nl.templify.iceinsights.services.SessionAnalyticsService;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 @Service
@@ -34,14 +36,19 @@ public class ActivityDetailsMapperImpl implements ActivityDetailsMapper {
         }
 
         StatsDto activityStats = response.getStats();
-        return response.getSessions().stream()
+        List<Session> sessions = new ArrayList<>(response.getSessions().stream()
                 .map(sessionDto -> mapSession(sessionDto, activity, activityStats))
-                .toList();
+                .toList());
+        sessions.sort(Comparator.comparing(Session::getDatetimeStart, Comparator.nullsLast(Comparator.naturalOrder())));
+        int sessionNr = 1;
+        for (Session session : sessions) {
+            session.setSessionNr(sessionNr++);
+        }
+        return sessions;
     }
 
     private Session mapSession(SessionDto dto, Activity activity, StatsDto activityStats) {
         Session session = Session.builder()
-                .externalId(dto.getId())
                 .activity(activity)
                 .chipId(dto.getChipId())
                 .datetimeStart(dto.getDateTimeStart())
