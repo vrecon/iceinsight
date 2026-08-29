@@ -5,6 +5,8 @@ import nl.templify.iceinsights.domain.Chip;
 import nl.templify.iceinsights.domain.Season;
 import nl.templify.iceinsights.domain.User;
 import nl.templify.iceinsights.dto.SeasonSummaryDto;
+import nl.templify.iceinsights.dto.SeasonTopEntryDto;
+import nl.templify.iceinsights.exceptions.InvalidBestNException;
 import nl.templify.iceinsights.exceptions.SeasonNotFoundException;
 import nl.templify.iceinsights.repositories.ActivityRepository;
 import nl.templify.iceinsights.repositories.SeasonRepository;
@@ -19,6 +21,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 import java.time.LocalDate;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -135,6 +139,67 @@ class SeasonQueryServiceImplTest {
         assertEquals("3:16.000",
                 SeasonQueryServiceImpl.minDuration(List.of(slow, missing, fast), Activity::getBest4Duration));
         assertNull(SeasonQueryServiceImpl.minDuration(List.of(missing), Activity::getBest13Duration));
+    }
+
+    @Test
+    void listCurrentUserSeasonTop_n13_excludesNullAndOrdersFasterFirst() {
+        Season season = season(5L, "2025/2026");
+        Activity slower = activity(1L, 7L, 5L, 2822L);
+        slower.setStartTime(ZonedDateTime.of(2026, 1, 10, 9, 0, 0, 0, ZoneOffset.UTC));
+        slower.setBest13Duration("11:20.000");
+        Activity missing = activity(2L, 7L, 5L, 2822L);
+        missing.setStartTime(ZonedDateTime.of(2026, 1, 11, 9, 0, 0, 0, ZoneOffset.UTC));
+        missing.setBest13Duration(null);
+        Activity faster = activity(3L, 7L, 5L, 2822L);
+        faster.setStartTime(ZonedDateTime.of(2026, 1, 12, 9, 0, 0, 0, ZoneOffset.UTC));
+        faster.setBest13Duration("10:50.000");
+
+        when(seasonRepository.findById(5L)).thenReturn(Optional.of(season));
+        when(activityRepository.findByChipIdInAndSeasonId(List.of(7L), 5L))
+                .thenReturn(List.of(slower, missing, faster));
+
+        List<SeasonTopEntryDto> top = service.listCurrentUserSeasonTop(5L, 13, 15, null);
+
+        assertEquals(2, top.size());
+        assertEquals(3L, top.get(0).getActivityId());
+        assertEquals("10:50.000", top.get(0).getDuration());
+        assertEquals(13, top.get(0).getN());
+        assertEquals(2822L, top.get(0).getLocationId());
+        assertEquals(7L, top.get(0).getChipId());
+        assertEquals(faster.getStartTime(), top.get(0).getStartTime());
+        assertEquals(1L, top.get(1).getActivityId());
+        assertEquals("11:20.000", top.get(1).getDuration());
+        assertEquals(13, top.get(1).getN());
+    }
+
+    @Test
+    void listCurrentUserSeasonTop_invalidN_rejected() {
+        InvalidBestNException ex = assertThrows(
+                InvalidBestNException.class,
+                () -> service.listCurrentUserSeasonTop(5L, 3, 15, null));
+        assertEquals("n must be one of 1, 2, 4, 8, 13, 25, 50, 100", ex.getMessage());
+        assertEquals(HttpStatus.BAD_REQUEST, ex.getClass().getAnnotation(ResponseStatus.class).value());
+        verify(seasonRepository, never()).findById(any());
+        verify(activityRepository, never()).findByChipIdInAndSeasonId(any(), any());
+    }
+
+    @Test
+    void listCurrentUserSeasonTop_missingSeasonOrNoActivities_throwsNotFound() {
+        when(seasonRepository.findById(99L)).thenReturn(Optional.empty());
+
+        SeasonNotFoundException missing = assertThrows(
+                SeasonNotFoundException.class,
+                () -> service.listCurrentUserSeasonTop(99L, 13, 15, null));
+        assertEquals("Season not found", missing.getMessage());
+
+        Season season = season(5L, "2025/2026");
+        when(seasonRepository.findById(5L)).thenReturn(Optional.of(season));
+        when(activityRepository.findByChipIdInAndSeasonId(List.of(7L), 5L)).thenReturn(List.of());
+
+        SeasonNotFoundException empty = assertThrows(
+                SeasonNotFoundException.class,
+                () -> service.listCurrentUserSeasonTop(5L, 13, 15, null));
+        assertEquals("Season not found", empty.getMessage());
     }
 
     private static User userWithChip(Long chipId) {
