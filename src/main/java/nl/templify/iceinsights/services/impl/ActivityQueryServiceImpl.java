@@ -69,9 +69,12 @@ public class ActivityQueryServiceImpl implements ActivityQueryService {
     private static boolean needsBackfill(Activity activity) {
         return activity.getBest1Duration() == null
                 && activity.getBest2Duration() == null
-                && activity.getBest5Duration() == null
+                && activity.getBest4Duration() == null
+                && activity.getBest8Duration() == null
                 && activity.getBest13Duration() == null
-                && activity.getBest25Duration() == null;
+                && activity.getBest25Duration() == null
+                && activity.getBest50Duration() == null
+                && activity.getBest100Duration() == null;
     }
 
     private static boolean ownsChip(User user, Long chipId) {

@@ -35,7 +35,9 @@ class SessionAnalyticsServiceImplTest {
         assertTrue(laps.get(2).getRest());
         assertEquals("49.000", stats.getBest1Duration());
         assertEquals("1:41.000", stats.getBest2Duration());
-        assertNull(stats.getBest5Duration());
+        assertEquals("3:22.000", stats.getBest4Duration());
+        assertNull(stats.getBest8Duration());
+        assertNull(stats.getBest13Duration());
         assertEquals(5, stats.getMovingAvgWindow());
         assertEquals("50.000", laps.get(0).getMovingAvgDuration());
         assertEquals("50.500", laps.get(1).getMovingAvgDuration());
@@ -61,8 +63,10 @@ class SessionAnalyticsServiceImplTest {
 
         assertNull(firstStats.getBest13Duration());
         assertNull(secondStats.getBest13Duration());
-        assertEquals("4:10.000", firstStats.getBest5Duration());
-        assertEquals("4:15.000", secondStats.getBest5Duration());
+        assertEquals("3:20.000", firstStats.getBest4Duration());
+        assertEquals("3:24.000", secondStats.getBest4Duration());
+        assertEquals("6:40.000", firstStats.getBest8Duration());
+        assertEquals("6:48.000", secondStats.getBest8Duration());
 
         Activity activity = new Activity();
         service.applyActivityBests(activity, List.of(
@@ -71,9 +75,8 @@ class SessionAnalyticsServiceImplTest {
 
         assertNull(activity.getBest13Duration());
         assertEquals("50.000", activity.getBest1Duration());
-        assertEquals("4:10.000", activity.getBest5Duration());
-        assertEquals("4:10.000", firstStats.getBest5Duration());
-        assertEquals("4:15.000", secondStats.getBest5Duration());
+        assertEquals("3:20.000", activity.getBest4Duration());
+        assertEquals("6:40.000", activity.getBest8Duration());
         assertFalse(firstLaps.get(0).getRest());
         assertEquals("50.000", firstLaps.get(0).getMovingAvgDuration());
     }
@@ -89,6 +92,11 @@ class SessionAnalyticsServiceImplTest {
 
         assertEquals(stats.getBest13Duration(), activity.getBest13Duration());
         assertEquals("10:50.000", activity.getBest13Duration());
+        assertEquals("3:20.000", activity.getBest4Duration());
+        assertEquals("6:40.000", activity.getBest8Duration());
+        assertNull(activity.getBest25Duration());
+        assertNull(activity.getBest50Duration());
+        assertNull(activity.getBest100Duration());
     }
 
     @Test
@@ -108,6 +116,8 @@ class SessionAnalyticsServiceImplTest {
         assertEquals(faster.getBest13Duration(), activity.getBest13Duration());
         assertEquals("10:37.000", activity.getBest13Duration());
         assertEquals("10:50.000", slower.getBest13Duration());
+        assertEquals("3:16.000", activity.getBest4Duration());
+        assertEquals("6:32.000", activity.getBest8Duration());
     }
 
     @Test
@@ -115,9 +125,12 @@ class SessionAnalyticsServiceImplTest {
         SessionStats withBest = SessionStats.builder()
                 .best1Duration("49.000")
                 .best2Duration("1:40.000")
-                .best5Duration(null)
+                .best4Duration(null)
+                .best8Duration(null)
                 .best13Duration(null)
                 .best25Duration(null)
+                .best50Duration(null)
+                .best100Duration(null)
                 .build();
         SessionStats empty = new SessionStats();
 
@@ -128,9 +141,28 @@ class SessionAnalyticsServiceImplTest {
 
         assertEquals("49.000", activity.getBest1Duration());
         assertEquals("1:40.000", activity.getBest2Duration());
-        assertNull(activity.getBest5Duration());
+        assertNull(activity.getBest4Duration());
+        assertNull(activity.getBest8Duration());
         assertEquals("49.000", withBest.getBest1Duration());
         assertNull(empty.getBest1Duration());
+    }
+
+    @Test
+    void applyActivityBests_fewerThanFourActiveLaps_best4IsNull() {
+        List<Lap> laps = nLaps(3, "50.000");
+        SessionStats stats = new SessionStats();
+        service.enrich(stats, laps);
+
+        assertNull(stats.getBest4Duration());
+        assertNull(stats.getBest8Duration());
+
+        Activity activity = new Activity();
+        service.applyActivityBests(activity, List.of(sessionWith(stats, laps)));
+
+        assertNull(activity.getBest4Duration());
+        assertNull(activity.getBest8Duration());
+        assertEquals("50.000", activity.getBest1Duration());
+        assertEquals("1:40.000", activity.getBest2Duration());
     }
 
     private static Session sessionWith(SessionStats stats, List<Lap> laps) {

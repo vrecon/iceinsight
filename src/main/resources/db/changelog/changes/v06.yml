@@ -1,0 +1,35 @@
+databaseChangeLog:
+  - changeSet:
+      id: session-and-activity-best-4-8-50-100
+      author: chief-coder
+      changes:
+        - addColumn:
+            tableName: session_stats
+            columns:
+              - column:
+                  name: best_4_duration
+                  type: varchar(20)
+              - column:
+                  name: best_8_duration
+                  type: varchar(20)
+              - column:
+                  name: best_50_duration
+                  type: varchar(20)
+              - column:
+                  name: best_100_duration
+                  type: varchar(20)
+        - addColumn:
+            tableName: activity
+            columns:
+              - column:
+                  name: best_4_duration
+                  type: varchar(20)
+              - column:
+                  name: best_8_duration
+                  type: varchar(20)
+              - column:
+                  name: best_50_duration
+                  type: varchar(20)
+              - column:
+                  name: best_100_duration
+                  type: varchar(20)

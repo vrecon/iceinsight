@@ -24,9 +24,13 @@ class ActivitySummaryMapperTest {
                 .chipId(7L)
                 .best1Duration("49.000")
                 .best2Duration("1:40.000")
+                .best4Duration("3:20.000")
                 .best5Duration("4:10.000")
+                .best8Duration("6:40.000")
                 .best13Duration(null)
                 .best25Duration(null)
+                .best50Duration(null)
+                .best100Duration(null)
                 .build();
 
         ActivitySummaryDto dto = mapper.toDto(activity);
@@ -39,9 +43,19 @@ class ActivitySummaryMapperTest {
         assertEquals(7L, dto.getChipId());
         assertEquals("49.000", dto.getBest1Duration());
         assertEquals("1:40.000", dto.getBest2Duration());
-        assertEquals("4:10.000", dto.getBest5Duration());
+        assertEquals("3:20.000", dto.getBest4Duration());
+        assertEquals("6:40.000", dto.getBest8Duration());
         assertNull(dto.getBest13Duration());
         assertNull(dto.getBest25Duration());
+        assertNull(dto.getBest50Duration());
+        assertNull(dto.getBest100Duration());
+    }
+
+    @Test
+    void dto_hasNoBest5Field() {
+        boolean hasBest5 = java.util.Arrays.stream(ActivitySummaryDto.class.getDeclaredFields())
+                .anyMatch(field -> "best5Duration".equals(field.getName()));
+        org.junit.jupiter.api.Assertions.assertFalse(hasBest5);
     }
 
     @Test

@@ -57,14 +57,26 @@ public class SessionStats {
     @Column(name = "best_2_duration")
     private String best2Duration;
 
+    @Column(name = "best_4_duration")
+    private String best4Duration;
+
     @Column(name = "best_5_duration")
     private String best5Duration;
+
+    @Column(name = "best_8_duration")
+    private String best8Duration;
 
     @Column(name = "best_13_duration")
     private String best13Duration;
 
     @Column(name = "best_25_duration")
     private String best25Duration;
+
+    @Column(name = "best_50_duration")
+    private String best50Duration;
+
+    @Column(name = "best_100_duration")
+    private String best100Duration;
 
     @Column(name = "moving_avg_window")
     private Integer movingAvgWindow;

@@ -87,6 +87,8 @@ class ActivityQueryServiceImplTest {
     @Test
     void getCurrentUserActivity_returnsStoredBestsForOwnChip() {
         Activity own = activity(10L, 7L, "49.000");
+        own.setBest4Duration("3:16.000");
+        own.setBest8Duration("6:32.000");
         own.setBest13Duration("10:50.000");
         when(activityRepository.findById(10L)).thenReturn(Optional.of(own));
 
@@ -95,6 +97,8 @@ class ActivityQueryServiceImplTest {
         assertEquals(10L, dto.getId());
         assertEquals(7L, dto.getChipId());
         assertEquals("49.000", dto.getBest1Duration());
+        assertEquals("3:16.000", dto.getBest4Duration());
+        assertEquals("6:32.000", dto.getBest8Duration());
         assertEquals("10:50.000", dto.getBest13Duration());
         verify(sessionAnalyticsService, never()).applyActivityBests(any(), any());
     }
