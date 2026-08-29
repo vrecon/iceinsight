@@ -25,8 +25,8 @@ public class Session {
     @SequenceGenerator(name = "session_seq", sequenceName = "session_seq", allocationSize = 1)
     private Long id;
 
-    @Column(name = "external_id")
-    private Long externalId;
+    @Column(name = "session_nr")
+    private Integer sessionNr;
     
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "activity_id", nullable = false)
