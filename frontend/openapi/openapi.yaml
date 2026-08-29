@@ -250,6 +250,32 @@ paths:
                 $ref: '#/components/schemas/ActivitySummary'
         '404':
           description: Activity not found or not owned by the current user
+  /api/v1/activities/{id}/laps:
+    get:
+      tags: [Activities]
+      operationId: listCurrentUserActivityLaps
+      summary: List laps for a current-user activity
+      description: |
+        All laps across all sessions of the activity, ordered by datetimeStart then lapNr.
+        Includes sessionNr so the client can group by session.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Activity laps
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ActivityLap'
+        '404':
+          description: Activity not found or not owned by the current user
   /api/v1/seasons:
     get:
       tags: [Seasons]
@@ -445,6 +471,24 @@ components:
         userId:
           type: integer
           format: int64
+    ActivityLap:
+      type: object
+      properties:
+        lapNr:
+          type: integer
+        sessionNr:
+          type: integer
+        datetimeStart:
+          type: string
+          format: date-time
+        duration:
+          type: string
+        rest:
+          type: boolean
+        movingAvgDuration:
+          type: string
+        speedKph:
+          type: number
     ActivitySummary:
       type: object
       properties:

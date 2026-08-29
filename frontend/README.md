@@ -14,7 +14,8 @@ CORS for :8100 and :4200 in backend PR 11.
 Screens: login, register, ritten, seizoenen, chips.
 Auth guard and interceptor in src/app/core/.
 
-TODOs: no laps endpoint; locationId/chipId without names;
+Rit detail shows a CSS bar chart of ronden grouped by sessie; rust laps are dimmed.
+TODOs: locationId/chipId without names;
 SeasonTopEntry has no activity name; User has no password field.
 
 Local: from this folder run the package install, then generate:api, then

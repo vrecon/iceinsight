@@ -1,0 +1,76 @@
+<div class="lap-chart">
+  <div class="legend muted">
+    <span class="swatch skate"></span> ronde
+    <span class="swatch rest"></span> rust
+    <span class="swatch avg"></span> voortschr. gem.
+  </div>
+
+  <div class="chart-scroll">
+    @for (group of groups(); track group.sessionNr) {
+      <div class="session">
+        <div class="bars" role="list">
+          @for (bar of group.bars; track bar.key) {
+            <button
+              type="button"
+              class="bar-col"
+              role="listitem"
+              [class.selected]="selected()?.key === bar.key"
+              [class.rest]="bar.rest"
+              [class.fastest]="bar.fastest"
+              [attr.aria-pressed]="selected()?.key === bar.key"
+              [attr.aria-label]="barLabel(bar)"
+              (click)="select(bar)"
+            >
+              <span class="track">
+                @if (bar.avgPct !== null) {
+                  <span class="avg-tick" [style.bottom.%]="bar.avgPct"></span>
+                }
+                <span
+                  class="fill"
+                  [style.height.%]="bar.heightPct"
+                  [title]="bar.lap.duration || ''"
+                ></span>
+              </span>
+              <span class="nr">{{ bar.rest ? 'r' : (bar.lap.lapNr ?? '') }}</span>
+            </button>
+          }
+        </div>
+        <p class="session-caption">
+          Sessie {{ group.sessionNr }} · {{ group.skateCount }} ronden
+        </p>
+      </div>
+    }
+  </div>
+
+  <p class="summary muted">
+    {{ skateCount() }} ronden
+    @if (restCount()) {
+      · {{ restCount() }} rust
+    }
+    · {{ groups().length }} sessie{{ groups().length === 1 ? '' : 's' }}
+  </p>
+
+  @if (selected(); as bar) {
+    <div class="analysis">
+      <p class="analysis-kicker">
+        @if (bar.fastest) {
+          Snelste ronde
+        } @else if (bar.rest) {
+          Rust
+        } @else {
+          Ronde
+        }
+      </p>
+      <p class="analysis-title">
+        Ronde {{ bar.lap.lapNr ?? '—' }} · sessie {{ bar.lap.sessionNr ?? '—' }}
+      </p>
+      <p class="analysis-time">{{ bar.lap.duration || '—' }}</p>
+      @if (speedLabel(bar.lap.speedKph)) {
+        <p class="muted">{{ speedLabel(bar.lap.speedKph) }}</p>
+      }
+      @if (bar.lap.movingAvgDuration && !bar.rest) {
+        <p class="muted">Voortschr. gem. {{ bar.lap.movingAvgDuration }}</p>
+      }
+    </div>
+  }
+</div>

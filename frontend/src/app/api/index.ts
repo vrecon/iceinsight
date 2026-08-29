@@ -6,6 +6,7 @@ export { RequestBuilder } from './request-builder';
 export type { StrictHttpResponse } from './strict-http-response';
 export { Api } from './api';
 
+export type { ActivityLap } from './models/activity-lap';
 export type { ActivitySummary } from './models/activity-summary';
 export type { AuthResponse } from './models/auth-response';
 export type { ChipDto } from './models/chip-dto';
@@ -51,6 +52,8 @@ export type { ListCurrentUserActivities$Params as ListCurrentUserActivities$Para
 export { listCurrentUserActivities as listCurrentUserActivities } from './fn/activities/list-current-user-activities';
 export type { GetCurrentUserActivity$Params as GetCurrentUserActivity$Params } from './fn/activities/get-current-user-activity';
 export { getCurrentUserActivity as getCurrentUserActivity } from './fn/activities/get-current-user-activity';
+export type { ListCurrentUserActivityLaps$Params as ListCurrentUserActivityLaps$Params } from './fn/activities/list-current-user-activity-laps';
+export { listCurrentUserActivityLaps as listCurrentUserActivityLaps } from './fn/activities/list-current-user-activity-laps';
 export type { ListCurrentUserSeasons$Params as ListCurrentUserSeasons$Params } from './fn/seasons/list-current-user-seasons';
 export { listCurrentUserSeasons as listCurrentUserSeasons } from './fn/seasons/list-current-user-seasons';
 export type { GetCurrentUserSeason$Params as GetCurrentUserSeason$Params } from './fn/seasons/get-current-user-season';

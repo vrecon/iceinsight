@@ -10,11 +10,14 @@ import { BaseService } from '../base-service';
 import { ApiConfiguration } from '../api-configuration';
 import { StrictHttpResponse } from '../strict-http-response';
 
+import { ActivityLap } from '../models/activity-lap';
 import { ActivitySummary } from '../models/activity-summary';
 import { getCurrentUserActivity } from '../fn/activities/get-current-user-activity';
 import { GetCurrentUserActivity$Params } from '../fn/activities/get-current-user-activity';
 import { listCurrentUserActivities } from '../fn/activities/list-current-user-activities';
 import { ListCurrentUserActivities$Params } from '../fn/activities/list-current-user-activities';
+import { listCurrentUserActivityLaps } from '../fn/activities/list-current-user-activity-laps';
+import { ListCurrentUserActivityLaps$Params } from '../fn/activities/list-current-user-activity-laps';
 
 
 /**
@@ -93,6 +96,43 @@ export class ActivitiesService extends BaseService {
     const resp = this.getCurrentUserActivity$Response(params, context);
     return resp.pipe(
       map((r: StrictHttpResponse<ActivitySummary>): ActivitySummary => r.body)
+    );
+  }
+
+  /** Path part for operation `listCurrentUserActivityLaps()` */
+  static readonly ListCurrentUserActivityLapsPath = '/api/v1/activities/{id}/laps';
+
+  /**
+   * List laps for a current-user activity.
+   *
+   * All laps across all sessions of the activity, ordered by datetimeStart then lapNr.
+   * Includes sessionNr so the client can group by session.
+   *
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `listCurrentUserActivityLaps()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  listCurrentUserActivityLaps$Response(params: ListCurrentUserActivityLaps$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<ActivityLap>>> {
+    const obs = listCurrentUserActivityLaps(this.http, this.rootUrl, params, context);
+    return obs;
+  }
+
+  /**
+   * List laps for a current-user activity.
+   *
+   * All laps across all sessions of the activity, ordered by datetimeStart then lapNr.
+   * Includes sessionNr so the client can group by session.
+   *
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `listCurrentUserActivityLaps$Response()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  listCurrentUserActivityLaps(params: ListCurrentUserActivityLaps$Params, context?: HttpContext): Observable<Array<ActivityLap>> {
+    const resp = this.listCurrentUserActivityLaps$Response(params, context);
+    return resp.pipe(
+      map((r: StrictHttpResponse<Array<ActivityLap>>): Array<ActivityLap> => r.body)
     );
   }
 

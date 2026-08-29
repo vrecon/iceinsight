@@ -18,11 +18,25 @@
       <p class="muted">{{ locationLabel(item.locationId) }} · chip #{{ item.chipId ?? '—' }}</p>
       <p class="todo-note">
         TODO: baannaam en chiplabel ontbreken op ActivitySummary (alleen locationId en chipId).
-        Geen rondetijden: er is nog geen laps-endpoint.
       </p>
 
       <h2>Opeenvolgende beste tijden</h2>
       <app-kpi-grid [model]="item"></app-kpi-grid>
+
+      <h2>Ronden</h2>
+      @if (lapsLoading()) {
+        <div class="center"><ion-spinner name="crescent"></ion-spinner></div>
+      } @else if (lapsError()) {
+        <ion-note color="danger">{{ lapsError() }}</ion-note>
+      } @else if (!laps().length) {
+        <app-empty-state
+          title="Geen ronden"
+          hint="Deze rit heeft nog geen rondetijden."
+          icon="time-outline"
+        ></app-empty-state>
+      } @else {
+        <app-lap-chart [laps]="laps()"></app-lap-chart>
+      }
     }
   </div>
 </ion-content>
