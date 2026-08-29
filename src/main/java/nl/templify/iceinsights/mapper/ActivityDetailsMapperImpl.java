@@ -41,7 +41,7 @@ public class ActivityDetailsMapperImpl implements ActivityDetailsMapper {
 
     private Session mapSession(SessionDto dto, Activity activity, StatsDto activityStats) {
         Session session = Session.builder()
-                .id(dto.getId())
+                .externalId(dto.getId())
                 .activity(activity)
                 .chipId(dto.getChipId())
                 .datetimeStart(dto.getDateTimeStart())
