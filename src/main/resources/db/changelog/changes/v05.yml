@@ -1,0 +1,23 @@
+databaseChangeLog:
+  - changeSet:
+      id: activity-best-n-durations
+      author: chief-coder
+      changes:
+        - addColumn:
+            tableName: activity
+            columns:
+              - column:
+                  name: best_1_duration
+                  type: varchar(20)
+              - column:
+                  name: best_2_duration
+                  type: varchar(20)
+              - column:
+                  name: best_5_duration
+                  type: varchar(20)
+              - column:
+                  name: best_13_duration
+                  type: varchar(20)
+              - column:
+                  name: best_25_duration
+                  type: varchar(20)

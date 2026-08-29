@@ -1,6 +1,8 @@
 package nl.templify.iceinsights.services.impl;
 
+import nl.templify.iceinsights.domain.Activity;
 import nl.templify.iceinsights.domain.Lap;
+import nl.templify.iceinsights.domain.Session;
 import nl.templify.iceinsights.domain.SessionStats;
 import nl.templify.iceinsights.services.SessionAnalyticsService;
 import org.springframework.stereotype.Service;
@@ -8,12 +10,13 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.function.Function;
 
 @Service
 public class SessionAnalyticsServiceImpl implements SessionAnalyticsService {
 
     static final int MOVING_AVG_WINDOW = 5;
-    private static final int[] BEST_NS = {1, 2, 5, 13, 25};
+    private static final int[] BEST_NS = {1, 2, 4, 8, 13, 25, 50, 100};
     private static final double REST_MEDIAN_FACTOR = 1.5;
 
     @Override
@@ -52,9 +55,12 @@ public class SessionAnalyticsServiceImpl implements SessionAnalyticsService {
         stats.setMovingAvgWindow(MOVING_AVG_WINDOW);
         stats.setBest1Duration(bestConsecutive(activeMillis, 1));
         stats.setBest2Duration(bestConsecutive(activeMillis, 2));
-        stats.setBest5Duration(bestConsecutive(activeMillis, 5));
+        stats.setBest4Duration(bestConsecutive(activeMillis, 4));
+        stats.setBest8Duration(bestConsecutive(activeMillis, 8));
         stats.setBest13Duration(bestConsecutive(activeMillis, 13));
         stats.setBest25Duration(bestConsecutive(activeMillis, 25));
+        stats.setBest50Duration(bestConsecutive(activeMillis, 50));
+        stats.setBest100Duration(bestConsecutive(activeMillis, 100));
         if (stats.getFastestTime() == null) {
             stats.setFastestTime(stats.getBest1Duration());
         }
@@ -77,6 +83,45 @@ public class SessionAnalyticsServiceImpl implements SessionAnalyticsService {
             }
             lap.setMovingAvgDuration(LapTime.format(Math.round(sum / (double) window.size())));
         }
+    }
+
+    @Override
+    public void applyActivityBests(Activity activity, List<Session> sessions) {
+        if (activity == null) {
+            return;
+        }
+        List<SessionStats> stats = sessions == null ? List.of() : sessions.stream()
+                .map(Session::getStats)
+                .filter(value -> value != null)
+                .toList();
+        activity.setBest1Duration(minDuration(stats, SessionStats::getBest1Duration));
+        activity.setBest2Duration(minDuration(stats, SessionStats::getBest2Duration));
+        activity.setBest4Duration(minDuration(stats, SessionStats::getBest4Duration));
+        activity.setBest8Duration(minDuration(stats, SessionStats::getBest8Duration));
+        activity.setBest13Duration(minDuration(stats, SessionStats::getBest13Duration));
+        activity.setBest25Duration(minDuration(stats, SessionStats::getBest25Duration));
+        activity.setBest50Duration(minDuration(stats, SessionStats::getBest50Duration));
+        activity.setBest100Duration(minDuration(stats, SessionStats::getBest100Duration));
+    }
+
+    private static String minDuration(List<SessionStats> stats, Function<SessionStats, String> getter) {
+        String best = null;
+        Long bestMs = null;
+        for (SessionStats stat : stats) {
+            String raw = getter.apply(stat);
+            if (raw == null || raw.isBlank()) {
+                continue;
+            }
+            Long ms = LapTime.toMillis(raw).orElse(null);
+            if (ms == null) {
+                continue;
+            }
+            if (bestMs == null || ms < bestMs) {
+                bestMs = ms;
+                best = raw;
+            }
+        }
+        return best;
     }
 
     private static String bestConsecutive(List<Long> activeMillis, int n) {

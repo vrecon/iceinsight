@@ -9,10 +9,14 @@ import java.time.ZonedDateTime;
 @Entity
 @Table(name = "laps")
 @Data
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@ToString(onlyExplicitlyIncluded = true)
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class Lap {
+    @EqualsAndHashCode.Include
+    @ToString.Include
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "lap_seq")
     @SequenceGenerator(name = "lap_seq", sequenceName = "lap_seq", allocationSize = 1)

@@ -1,0 +1,17 @@
+databaseChangeLog:
+  - changeSet:
+      id: rename-session-external-id-to-session-nr
+      author: chief-coder
+      changes:
+        - dropUniqueConstraint:
+            tableName: sessions
+            constraintName: uk_session_activity_external
+        - renameColumn:
+            tableName: sessions
+            oldColumnName: external_id
+            newColumnName: session_nr
+            columnDataType: bigint
+        - addUniqueConstraint:
+            tableName: sessions
+            columnNames: activity_id, session_nr
+            constraintName: uk_session_activity_nr

@@ -5,6 +5,7 @@ import nl.templify.iceinsights.dto.ActivityDto;
 import nl.templify.iceinsights.dto.ActivityResponseDto;
 import nl.templify.iceinsights.repositories.ActivityRepository;
 import nl.templify.iceinsights.services.ChipService;
+import nl.templify.iceinsights.services.SeasonService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -43,6 +44,8 @@ class ActivityImportServiceImplTest {
     @Mock
     private ChipService chipService;
     @Mock
+    private SeasonService seasonService;
+    @Mock
     private PlatformTransactionManager transactionManager;
 
     private ActivityImportServiceImpl service;
@@ -50,7 +53,8 @@ class ActivityImportServiceImplTest {
     @BeforeEach
     void setUp() {
         lenient().when(transactionManager.getTransaction(any())).thenReturn(mock(TransactionStatus.class));
-        service = spy(new ActivityImportServiceImpl(webClient, activityRepository, chipService, transactionManager));
+        service = spy(new ActivityImportServiceImpl(
+                webClient, activityRepository, chipService, seasonService, transactionManager));
     }
 
     @Test
@@ -69,6 +73,7 @@ class ActivityImportServiceImplTest {
 
         doReturn(response).when(service).fetchActivitiesResponse(eq(2822L), eq(0), eq(2026), eq(1));
         when(chipService.getOrCreateChipId("CHIP-1", "Jan")).thenReturn(99L);
+        when(seasonService.getOrCreateId(dto.getStartTime())).thenReturn(5L);
 
         int imported = service.importActivities(2822L, 2026, 1);
 
@@ -83,6 +88,7 @@ class ActivityImportServiceImplTest {
         assertEquals("Practice", saved.getName());
         assertEquals(2822L, saved.getLocationId());
         assertEquals(99L, saved.getChipId());
+        assertEquals(5L, saved.getSeasonId());
         assertEquals(dto.getStartTime(), saved.getStartTime());
         assertEquals(dto.getEndTime(), saved.getEndTime());
     }

@@ -1,0 +1,81 @@
+databaseChangeLog:
+  - changeSet:
+      id: season-table-and-activity-season-id
+      author: chief-coder
+      changes:
+        - createSequence:
+            sequenceName: season_seq
+            incrementBy: 1
+            startValue: 1
+        - createTable:
+            tableName: season
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  defaultValueSequenceNext: season_seq
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: label
+                  type: varchar(20)
+                  constraints:
+                    nullable: false
+                    unique: true
+              - column:
+                  name: start_date
+                  type: date
+                  constraints:
+                    nullable: false
+                    unique: true
+              - column:
+                  name: end_date
+                  type: date
+                  constraints:
+                    nullable: false
+        - addColumn:
+            tableName: activity
+            columns:
+              - column:
+                  name: season_id
+                  type: bigint
+        - sql:
+            sql: |
+              INSERT INTO season (id, label, start_date, end_date)
+              SELECT nextval('season_seq'),
+                     (EXTRACT(YEAR FROM d.start_date)::int)::text || '/' || (EXTRACT(YEAR FROM d.start_date)::int + 1)::text,
+                     d.start_date,
+                     (d.start_date + INTERVAL '1 year' - INTERVAL '1 day')::date
+              FROM (
+                SELECT DISTINCT
+                  CASE
+                    WHEN EXTRACT(MONTH FROM (start_time AT TIME ZONE 'Europe/Amsterdam')) >= 5
+                      THEN make_date(EXTRACT(YEAR FROM (start_time AT TIME ZONE 'Europe/Amsterdam'))::int, 5, 1)
+                    ELSE make_date(EXTRACT(YEAR FROM (start_time AT TIME ZONE 'Europe/Amsterdam'))::int - 1, 5, 1)
+                  END AS start_date
+                FROM activity
+              ) d
+              ON CONFLICT (start_date) DO NOTHING;
+
+              UPDATE activity a
+              SET season_id = s.id
+              FROM season s
+              WHERE a.season_id IS NULL
+                AND s.start_date = CASE
+                  WHEN EXTRACT(MONTH FROM (a.start_time AT TIME ZONE 'Europe/Amsterdam')) >= 5
+                    THEN make_date(EXTRACT(YEAR FROM (a.start_time AT TIME ZONE 'Europe/Amsterdam'))::int, 5, 1)
+                  ELSE make_date(EXTRACT(YEAR FROM (a.start_time AT TIME ZONE 'Europe/Amsterdam'))::int - 1, 5, 1)
+                END;
+        - addForeignKeyConstraint:
+            constraintName: fk_activity_season
+            baseTableName: activity
+            baseColumnNames: season_id
+            referencedTableName: season
+            referencedColumnNames: id
+        - createIndex:
+            indexName: idx_activity_season
+            tableName: activity
+            columns:
+              - column:
+                  name: season_id

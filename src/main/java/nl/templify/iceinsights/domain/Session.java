@@ -12,12 +12,21 @@ import java.util.List;
 @Entity
 @Table(name = "sessions")
 @Data
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@ToString(onlyExplicitlyIncluded = true)
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class Session {
+    @EqualsAndHashCode.Include
+    @ToString.Include
     @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "session_seq")
+    @SequenceGenerator(name = "session_seq", sequenceName = "session_seq", allocationSize = 1)
     private Long id;
+
+    @Column(name = "session_nr")
+    private Integer sessionNr;
     
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "activity_id", nullable = false)
