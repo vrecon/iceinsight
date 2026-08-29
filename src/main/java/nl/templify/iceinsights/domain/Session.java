@@ -12,10 +12,14 @@ import java.util.List;
 @Entity
 @Table(name = "sessions")
 @Data
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@ToString(onlyExplicitlyIncluded = true)
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class Session {
+    @EqualsAndHashCode.Include
+    @ToString.Include
     @Id
     private Long id;
     
