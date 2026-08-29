@@ -12,6 +12,7 @@ import nl.templify.iceinsights.repositories.ActivityRepository;
 import nl.templify.iceinsights.repositories.SessionRepository;
 import nl.templify.iceinsights.repositories.UserRepository;
 import nl.templify.iceinsights.services.ActivitySyncService;
+import nl.templify.iceinsights.services.SessionAnalyticsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -30,6 +31,7 @@ public class ActivitySyncServiceImpl implements ActivitySyncService {
     private final SessionRepository sessionRepository;
     private final WebClient webClient;
     private final ActivityDetailsMapper detailsMapper;
+    private final SessionAnalyticsService sessionAnalyticsService;
 
     @Override
     @Transactional
@@ -63,6 +65,8 @@ public class ActivitySyncServiceImpl implements ActivitySyncService {
             if (details != null) {
                 List<Session> sessions = detailsMapper.mapToEntities(details, activity);
                 sessionRepository.saveAll(sessions);
+                sessionAnalyticsService.applyActivityBests(activity, sessions);
+                activityRepository.save(activity);
                 log.info("Successfully saved {} sessions for activity: {}",
                         sessions.size(), activity.getId());
             }

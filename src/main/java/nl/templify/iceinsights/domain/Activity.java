@@ -28,4 +28,19 @@ public class Activity {
     
     @Column(nullable = false)
     private Long chipId;
+
+    @Column(name = "best_1_duration")
+    private String best1Duration;
+
+    @Column(name = "best_2_duration")
+    private String best2Duration;
+
+    @Column(name = "best_5_duration")
+    private String best5Duration;
+
+    @Column(name = "best_13_duration")
+    private String best13Duration;
+
+    @Column(name = "best_25_duration")
+    private String best25Duration;
 }

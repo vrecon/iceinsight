@@ -1,6 +1,8 @@
 package nl.templify.iceinsights.services.impl;
 
+import nl.templify.iceinsights.domain.Activity;
 import nl.templify.iceinsights.domain.Lap;
+import nl.templify.iceinsights.domain.Session;
 import nl.templify.iceinsights.domain.SessionStats;
 import nl.templify.iceinsights.services.SessionAnalyticsService;
 import org.springframework.stereotype.Service;
@@ -8,6 +10,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.function.Function;
 
 @Service
 public class SessionAnalyticsServiceImpl implements SessionAnalyticsService {
@@ -77,6 +80,42 @@ public class SessionAnalyticsServiceImpl implements SessionAnalyticsService {
             }
             lap.setMovingAvgDuration(LapTime.format(Math.round(sum / (double) window.size())));
         }
+    }
+
+    @Override
+    public void applyActivityBests(Activity activity, List<Session> sessions) {
+        if (activity == null) {
+            return;
+        }
+        List<SessionStats> stats = sessions == null ? List.of() : sessions.stream()
+                .map(Session::getStats)
+                .filter(value -> value != null)
+                .toList();
+        activity.setBest1Duration(minDuration(stats, SessionStats::getBest1Duration));
+        activity.setBest2Duration(minDuration(stats, SessionStats::getBest2Duration));
+        activity.setBest5Duration(minDuration(stats, SessionStats::getBest5Duration));
+        activity.setBest13Duration(minDuration(stats, SessionStats::getBest13Duration));
+        activity.setBest25Duration(minDuration(stats, SessionStats::getBest25Duration));
+    }
+
+    private static String minDuration(List<SessionStats> stats, Function<SessionStats, String> getter) {
+        String best = null;
+        Long bestMs = null;
+        for (SessionStats stat : stats) {
+            String raw = getter.apply(stat);
+            if (raw == null || raw.isBlank()) {
+                continue;
+            }
+            Long ms = LapTime.toMillis(raw).orElse(null);
+            if (ms == null) {
+                continue;
+            }
+            if (bestMs == null || ms < bestMs) {
+                bestMs = ms;
+                best = raw;
+            }
+        }
+        return best;
     }
 
     private static String bestConsecutive(List<Long> activeMillis, int n) {
