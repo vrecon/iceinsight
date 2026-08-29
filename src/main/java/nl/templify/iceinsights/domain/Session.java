@@ -21,7 +21,12 @@ public class Session {
     @EqualsAndHashCode.Include
     @ToString.Include
     @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "session_seq")
+    @SequenceGenerator(name = "session_seq", sequenceName = "session_seq", allocationSize = 1)
     private Long id;
+
+    @Column(name = "external_id")
+    private Long externalId;
     
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "activity_id", nullable = false)
