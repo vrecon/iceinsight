@@ -1,6 +1,7 @@
 package nl.templify.iceinsights.mapper;
 
 import nl.templify.iceinsights.domain.Activity;
+import nl.templify.iceinsights.services.impl.SessionAnalyticsServiceImpl;
 import nl.templify.iceinsights.domain.LapStatus;
 import nl.templify.iceinsights.domain.Session;
 import nl.templify.iceinsights.dto.ActivityDetailsResponse;
@@ -21,7 +22,7 @@ import static org.junit.jupiter.api.Assertions.assertSame;
 
 class ActivityDetailsMapperTest {
 
-    private final ActivityDetailsMapper mapper = new ActivityDetailsMapperImpl();
+    private final ActivityDetailsMapper mapper = new ActivityDetailsMapperImpl(new SessionAnalyticsServiceImpl());
 
     @Test
     void mapToEntities_persistsActivityStatsOnTheSession() {
@@ -85,5 +86,6 @@ class ActivityDetailsMapperTest {
         assertEquals(0, session.getStats().getAverageSpeedKph().compareTo(BigDecimal.valueOf(32.1)));
         assertEquals(1, session.getLaps().size());
         assertEquals(LapStatus.FASTER, session.getLaps().get(0).getStatus());
+        assertEquals("34.000", session.getStats().getBest1Duration());
     }
 }

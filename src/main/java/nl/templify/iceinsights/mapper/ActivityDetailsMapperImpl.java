@@ -11,6 +11,8 @@ import nl.templify.iceinsights.dto.LapDto;
 import nl.templify.iceinsights.dto.SessionDto;
 import nl.templify.iceinsights.dto.SpeedDto;
 import nl.templify.iceinsights.dto.StatsDto;
+import lombok.RequiredArgsConstructor;
+import nl.templify.iceinsights.services.SessionAnalyticsService;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -19,7 +21,11 @@ import java.util.List;
 
 @Service
 @Slf4j
+@RequiredArgsConstructor
 public class ActivityDetailsMapperImpl implements ActivityDetailsMapper {
+
+    private final SessionAnalyticsService sessionAnalyticsService;
+
 
     @Override
     public List<Session> mapToEntities(ActivityDetailsResponse response, Activity activity) {
@@ -55,6 +61,7 @@ public class ActivityDetailsMapperImpl implements ActivityDetailsMapper {
         session.setLaps(laps);
 
         SessionStats stats = mapSessionStats(dto, activityStats, session, laps.size());
+        sessionAnalyticsService.enrich(stats, laps);
         session.setStats(stats);
         return session;
     }
