@@ -77,7 +77,7 @@ class ActivityDetailsMapperTest {
         List<Session> sessions = mapper.mapToEntities(response, activity);
         assertEquals(1, sessions.size());
         Session session = sessions.get(0);
-        assertEquals(99L, session.getExternalId());
+        assertEquals(1, session.getSessionNr());
         assertNotNull(session.getStats());
         assertSame(session, session.getStats().getSession());
         assertEquals(1, session.getStats().getLapCount());
