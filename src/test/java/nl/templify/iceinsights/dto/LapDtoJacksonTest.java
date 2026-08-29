@@ -1,15 +1,14 @@
 package nl.templify.iceinsights.dto;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.junit.jupiter.api.Test;
+import tools.jackson.databind.json.JsonMapper;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 
 class LapDtoJacksonTest {
 
-    private final ObjectMapper mapper = new ObjectMapper().registerModule(new JavaTimeModule());
+    private final JsonMapper mapper = JsonMapper.builder().build();
 
     @Test
     void dataAttributes_objectsFromSpeedhiveDoNotFail() throws Exception {
