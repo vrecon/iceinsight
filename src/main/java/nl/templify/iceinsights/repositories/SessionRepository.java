@@ -15,4 +15,7 @@ public interface SessionRepository extends JpaRepository<Session, Long> {
 
     @Query("select s from Session s left join fetch s.stats where s.activity.id = :activityId")
     List<Session> findByActivityIdWithStats(@Param("activityId") Long activityId);
+
+    @Query("select distinct s from Session s left join fetch s.laps where s.activity.id = :activityId order by s.sessionNr, s.datetimeStart")
+    List<Session> findByActivityIdWithLaps(@Param("activityId") Long activityId);
 }

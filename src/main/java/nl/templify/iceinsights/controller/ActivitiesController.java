@@ -1,6 +1,7 @@
 package nl.templify.iceinsights.controller;
 
 import lombok.RequiredArgsConstructor;
+import nl.templify.iceinsights.dto.ActivityLapDto;
 import nl.templify.iceinsights.dto.ActivitySummaryDto;
 import nl.templify.iceinsights.services.ActivityQueryService;
 import org.springframework.http.ResponseEntity;
@@ -26,5 +27,10 @@ public class ActivitiesController {
     @GetMapping("/{id}")
     public ResponseEntity<ActivitySummaryDto> getCurrentUserActivity(@PathVariable Long id) {
         return ResponseEntity.ok(activityQueryService.getCurrentUserActivity(id));
+    }
+
+    @GetMapping("/{id}/laps")
+    public ResponseEntity<List<ActivityLapDto>> listCurrentUserActivityLaps(@PathVariable Long id) {
+        return ResponseEntity.ok(activityQueryService.listCurrentUserActivityLaps(id));
     }
 }
