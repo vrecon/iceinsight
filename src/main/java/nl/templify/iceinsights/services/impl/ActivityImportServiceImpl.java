@@ -7,6 +7,7 @@ import nl.templify.iceinsights.dto.ActivityResponseDto;
 import nl.templify.iceinsights.repositories.ActivityRepository;
 import nl.templify.iceinsights.services.ActivityImportService;
 import nl.templify.iceinsights.services.ChipService;
+import nl.templify.iceinsights.services.SeasonService;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.PlatformTransactionManager;
@@ -29,15 +30,18 @@ public class ActivityImportServiceImpl implements ActivityImportService {
     private final WebClient webClient;
     private final ActivityRepository activityRepository;
     private final ChipService chipService;
+    private final SeasonService seasonService;
     private final TransactionTemplate transactionTemplate;
 
     public ActivityImportServiceImpl(WebClient webClient,
                                      ActivityRepository activityRepository,
                                      ChipService chipService,
+                                     SeasonService seasonService,
                                      PlatformTransactionManager transactionManager) {
         this.webClient = webClient;
         this.activityRepository = activityRepository;
         this.chipService = chipService;
+        this.seasonService = seasonService;
         this.transactionTemplate = new TransactionTemplate(transactionManager);
     }
 
@@ -142,6 +146,9 @@ public class ActivityImportServiceImpl implements ActivityImportService {
             List<Activity> entities = activities.stream()
                     .map(dto -> {
                         Long chipId = chipService.getOrCreateChipId(dto.getChipCode(), dto.getChipLabel());
+                        Long seasonId = dto.getStartTime() == null
+                                ? null
+                                : seasonService.getOrCreateId(dto.getStartTime());
                         return Activity.builder()
                                 .id(dto.getId())
                                 .name(dto.getName())
@@ -149,6 +156,7 @@ public class ActivityImportServiceImpl implements ActivityImportService {
                                 .endTime(dto.getEndTime())
                                 .locationId(locationId)
                                 .chipId(chipId)
+                                .seasonId(seasonId)
                                 .build();
                     })
                     .toList();

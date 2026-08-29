@@ -29,6 +29,9 @@ public class Activity {
     @Column(nullable = false)
     private Long chipId;
 
+    @Column(name = "season_id")
+    private Long seasonId;
+
     @Column(name = "best_1_duration")
     private String best1Duration;
 
