@@ -1,0 +1,28 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/tabs/ritten"></ion-back-button>
+    </ion-buttons>
+    <ion-title>{{ activity()?.name || 'Rit' }}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="page-pad">
+    @if (loading()) {
+      <div class="center"><ion-spinner name="crescent"></ion-spinner></div>
+    } @else if (error()) {
+      <ion-note color="danger">{{ error() }}</ion-note>
+    } @else if (activity(); as item) {
+      <p class="muted">{{ formatDateTime(item.startTime) }} — {{ formatDateTime(item.endTime) }}</p>
+      <p class="muted">{{ locationLabel(item.locationId) }} · chip #{{ item.chipId ?? '—' }}</p>
+      <p class="todo-note">
+        TODO: baannaam en chiplabel ontbreken op ActivitySummary (alleen locationId en chipId).
+        Geen rondetijden: er is nog geen laps-endpoint.
+      </p>
+
+      <h2>Opeenvolgende beste tijden</h2>
+      <app-kpi-grid [model]="item"></app-kpi-grid>
+    }
+  </div>
+</ion-content>

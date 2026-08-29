@@ -1,0 +1,7 @@
+{
+  "name": "IceInsights",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}

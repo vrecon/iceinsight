@@ -1,0 +1,35 @@
+:root {
+  /* Ice blue — not Ionic purple */
+  --ion-color-primary: #4c8eaa;
+  --ion-color-primary-rgb: 76, 142, 170;
+  --ion-color-primary-contrast: #ffffff;
+  --ion-color-primary-contrast-rgb: 255, 255, 255;
+  --ion-color-primary-shade: #437d96;
+  --ion-color-primary-tint: #5e99b3;
+
+  --ion-color-secondary: #7a93a3;
+  --ion-color-secondary-rgb: 122, 147, 163;
+  --ion-color-secondary-contrast: #ffffff;
+  --ion-color-secondary-contrast-rgb: 255, 255, 255;
+  --ion-color-secondary-shade: #6b818f;
+  --ion-color-secondary-tint: #879eac;
+
+  --ion-color-tertiary: #8aa4b3;
+  --ion-color-success: #4d7c6f;
+  --ion-color-warning: #b0894a;
+  --ion-color-danger: #9a4f4f;
+  --ion-color-medium: #8a9aa6;
+  --ion-color-light: #eef4f7;
+
+  --ion-background-color: #f4f8fb;
+  --ion-background-color-rgb: 244, 248, 251;
+  --ion-text-color: #2a3944;
+  --ion-text-color-rgb: 42, 57, 68;
+  --ion-toolbar-background: #f7fbfd;
+  --ion-toolbar-color: #2a3944;
+  --ion-tab-bar-background: #f7fbfd;
+  --ion-item-background: #ffffff;
+  --ion-card-background: #ffffff;
+  --ion-font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+  --ion-border-color: #d9e4eb;
+}
