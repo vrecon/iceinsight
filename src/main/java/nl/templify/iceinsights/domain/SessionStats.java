@@ -8,10 +8,14 @@ import java.math.BigDecimal;
 @Entity
 @Table(name = "session_stats")
 @Data
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@ToString(onlyExplicitlyIncluded = true)
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class SessionStats {
+    @EqualsAndHashCode.Include
+    @ToString.Include
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "session_stats_seq")
     @SequenceGenerator(name = "session_stats_seq", sequenceName = "session_stats_seq", allocationSize = 1)
