@@ -1,0 +1,36 @@
+databaseChangeLog:
+  - changeSet:
+      id: session-analytics-best-n-and-moving-avg
+      author: chief-coder
+      changes:
+        - addColumn:
+            tableName: session_stats
+            columns:
+              - column:
+                  name: best_1_duration
+                  type: varchar(20)
+              - column:
+                  name: best_2_duration
+                  type: varchar(20)
+              - column:
+                  name: best_5_duration
+                  type: varchar(20)
+              - column:
+                  name: best_13_duration
+                  type: varchar(20)
+              - column:
+                  name: best_25_duration
+                  type: varchar(20)
+              - column:
+                  name: moving_avg_window
+                  type: integer
+        - addColumn:
+            tableName: laps
+            columns:
+              - column:
+                  name: moving_avg_duration
+                  type: varchar(20)
+              - column:
+                  name: rest
+                  type: boolean
+                  defaultValueBoolean: false
