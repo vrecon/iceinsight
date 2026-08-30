@@ -19,7 +19,7 @@ TODOs: locationId/chipId without names;
 SeasonTopEntry has no activity name; User has no password field.
 
 Local: from this folder run the package install, then generate:api, then
-ionic serve (port 8100) or the start script. Capacitor webDir is www.
+ionic serve (port 8100) or the start script. Dev server proxies `/api` to `http://localhost:8086` via `proxy.conf.json`. Capacitor webDir is www.
 Native platforms are not added here.
 
 KPI cards show consecutive bests 1/2/4/8/13/25/50/100 as large tabular numbers.
