@@ -1,5 +1,6 @@
 package nl.templify.iceinsights.controller;
 
+import nl.templify.iceinsights.dto.ActivityLapDto;
 import nl.templify.iceinsights.dto.ActivitySummaryDto;
 import nl.templify.iceinsights.exceptions.ActivityNotFoundException;
 import nl.templify.iceinsights.services.ActivityQueryService;
@@ -43,5 +44,18 @@ class ActivitiesControllerTest {
                 .thenThrow(new ActivityNotFoundException("Activity not found"));
 
         assertThrows(ActivityNotFoundException.class, () -> controller.getCurrentUserActivity(99L));
+    }
+
+    @Test
+    void listLaps_returnsBodyFromService() {
+        ActivityLapDto dto = ActivityLapDto.builder().lapNr(1).sessionNr(1).duration("49.800").build();
+        when(activityQueryService.listCurrentUserActivityLaps(10L)).thenReturn(List.of(dto));
+
+        ResponseEntity<List<ActivityLapDto>> response = controller.listCurrentUserActivityLaps(10L);
+
+        assertEquals(200, response.getStatusCode().value());
+        assertEquals(1, response.getBody().size());
+        assertEquals(1, response.getBody().get(0).getLapNr());
+        assertEquals("49.800", response.getBody().get(0).getDuration());
     }
 }

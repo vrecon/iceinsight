@@ -4,8 +4,10 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import nl.templify.iceinsights.domain.Activity;
 import nl.templify.iceinsights.domain.Chip;
+import nl.templify.iceinsights.domain.Lap;
 import nl.templify.iceinsights.domain.Session;
 import nl.templify.iceinsights.domain.User;
+import nl.templify.iceinsights.dto.ActivityLapDto;
 import nl.templify.iceinsights.dto.ActivitySummaryDto;
 import nl.templify.iceinsights.exceptions.ActivityNotFoundException;
 import nl.templify.iceinsights.mapper.ActivitySummaryMapper;
@@ -18,6 +20,7 @@ import nl.templify.iceinsights.services.SessionAnalyticsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
 
@@ -48,13 +51,29 @@ public class ActivityQueryServiceImpl implements ActivityQueryService {
     @Override
     @Transactional
     public ActivitySummaryDto getCurrentUserActivity(Long id) {
+        return toSummaryBackfilling(requireCurrentUserActivity(id));
+    }
+
+    @Override
+    @Transactional
+    public List<ActivityLapDto> listCurrentUserActivityLaps(Long id) {
+        requireCurrentUserActivity(id);
+        return sessionRepository.findByActivityIdWithLaps(id).stream()
+                .flatMap(session -> lapsOf(session).stream().map(lap -> toLapDto(lap, session)))
+                .sorted(Comparator
+                        .comparing(ActivityLapDto::getDatetimeStart, Comparator.nullsLast(Comparator.naturalOrder()))
+                        .thenComparing(ActivityLapDto::getLapNr, Comparator.nullsLast(Comparator.naturalOrder())))
+                .toList();
+    }
+
+    private Activity requireCurrentUserActivity(Long id) {
         User user = getCurrentUser();
         Activity activity = activityRepository.findById(id)
                 .orElseThrow(() -> new ActivityNotFoundException("Activity not found"));
         if (!ownsChip(user, activity.getChipId())) {
             throw new ActivityNotFoundException("Activity not found");
         }
-        return toSummaryBackfilling(activity);
+        return activity;
     }
 
     private ActivitySummaryDto toSummaryBackfilling(Activity activity) {
@@ -64,6 +83,22 @@ public class ActivityQueryServiceImpl implements ActivityQueryService {
             activityRepository.save(activity);
         }
         return activitySummaryMapper.toDto(activity);
+    }
+
+    private static List<Lap> lapsOf(Session session) {
+        return session.getLaps() == null ? List.of() : session.getLaps();
+    }
+
+    private static ActivityLapDto toLapDto(Lap lap, Session session) {
+        return ActivityLapDto.builder()
+                .lapNr(lap.getLapNr())
+                .sessionNr(session.getSessionNr())
+                .datetimeStart(lap.getDatetimeStart())
+                .duration(lap.getDuration())
+                .rest(lap.getRest())
+                .movingAvgDuration(lap.getMovingAvgDuration())
+                .speedKph(lap.getSpeedKph())
+                .build();
     }
 
     private static boolean needsBackfill(Activity activity) {
