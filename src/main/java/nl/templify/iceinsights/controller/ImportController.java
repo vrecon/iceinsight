@@ -1,20 +1,16 @@
 package nl.templify.iceinsights.controller;
 
 import lombok.AllArgsConstructor;
+import nl.templify.iceinsights.api.ImportApi;
 import nl.templify.iceinsights.services.ActivityImportService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.time.Year;
 
 @RestController
-@RequestMapping("/api/v1/import")
 @AllArgsConstructor
-public class ImportController {
+public class ImportController implements ImportApi {
 
     static final int DEFAULT_MAX = 500;
 
@@ -26,11 +22,8 @@ public class ImportController {
      * (e.g. Haarlem 2822, ~355k activities) stay practical.
      * Pass {@code year} and {@code max} as query parameters to override.
      */
-    @PostMapping("/activities/{locationId}")
-    public ResponseEntity<String> importActivities(
-            @PathVariable Long locationId,
-            @RequestParam(required = false) Integer year,
-            @RequestParam(required = false) Integer max) {
+    @Override
+    public ResponseEntity<String> importActivities(Long locationId, Integer year, Integer max) {
         int importYear = year != null ? year : Year.now().getValue();
         int importMax = (max == null || max < 1) ? DEFAULT_MAX : max;
         int imported = importService.importActivities(locationId, importYear, importMax);

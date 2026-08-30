@@ -1,0 +1,579 @@
+openapi: 3.1.0
+info:
+  title: IceInsights
+  version: 0.0.1
+  description: |
+    Ice skating insights API. This OpenAPI document is the HTTP contract.
+    Paths match the current public API and are not renamed.
+servers:
+  - url: http://localhost:8086
+security:
+  - bearerAuth: []
+tags:
+  - name: Auth
+    description: Registration, login, token refresh, and password reset
+  - name: Chips
+    description: Link and list transponder chips for the current user
+  - name: Import
+    description: Import practice activities from Speedhive
+  - name: Sync
+    description: Trigger activity sync for the current user
+  - name: Activities
+    description: Current-user activity summaries
+  - name: Seasons
+    description: Current-user season summaries and top-N lists
+paths:
+  /api/v1/auth/register:
+    post:
+      tags: [Auth]
+      operationId: register
+      summary: Register a new user
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegisterRequest'
+      responses:
+        '200':
+          description: Registered
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthResponse'
+  /api/v1/auth/login:
+    post:
+      tags: [Auth]
+      operationId: login
+      summary: Log in
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+      responses:
+        '200':
+          description: Authenticated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthResponse'
+  /api/v1/auth/refresh-token:
+    post:
+      tags: [Auth]
+      operationId: refreshToken
+      summary: Refresh access token
+      description: |
+        Refresh token may be supplied in the JSON body or in the `refresh_token` cookie.
+      security: []
+      parameters:
+        - name: refresh_token
+          in: cookie
+          required: false
+          schema:
+            type: string
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RefreshTokenRequest'
+      responses:
+        '200':
+          description: Refreshed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthResponse'
+  /api/v1/auth/forgot-password:
+    post:
+      tags: [Auth]
+      operationId: forgotPassword
+      summary: Request a password reset email
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ForgotPasswordRequest'
+      responses:
+        '200':
+          description: Accepted (empty body)
+  /api/v1/auth/reset-password:
+    post:
+      tags: [Auth]
+      operationId: resetPassword
+      summary: Reset password with a token
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ResetPasswordRequest'
+      responses:
+        '200':
+          description: Password reset (empty body)
+  /api/v1/auth/logout:
+    post:
+      tags: [Auth]
+      operationId: logout
+      summary: Log out and clear refresh cookie
+      security: []
+      responses:
+        '200':
+          description: Logged out (empty body)
+  /api/v1/users/chips:
+    get:
+      tags: [Chips]
+      operationId: getCurrentUserChips
+      summary: List chips linked to the current user
+      responses:
+        '200':
+          description: Linked chips
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ChipDto'
+  /api/v1/users/chips/{chipCode}:
+    post:
+      tags: [Chips]
+      operationId: linkChipToCurrentUser
+      summary: Link a chip to the current user
+      parameters:
+        - name: chipCode
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Linked chip
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChipDto'
+    delete:
+      tags: [Chips]
+      operationId: unlinkChipFromCurrentUser
+      summary: Unlink a chip from the current user
+      parameters:
+        - name: chipCode
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Unlinked (empty body)
+  /api/v1/import/activities/{locationId}:
+    post:
+      tags: [Import]
+      operationId: importActivities
+      summary: Import Speedhive activities for a location
+      description: |
+        Defaults to the current calendar year and at most 500 rows.
+      parameters:
+        - name: locationId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: year
+          in: query
+          required: false
+          description: Calendar year to import. Defaults to the current year.
+          schema:
+            type: integer
+        - name: max
+          in: query
+          required: false
+          description: Maximum number of activities to import.
+          schema:
+            type: integer
+            default: 500
+            minimum: 1
+      responses:
+        '200':
+          description: Import summary message
+          content:
+            text/plain:
+              schema:
+                type: string
+  /api/activity/sync:
+    get:
+      tags: [Sync]
+      operationId: syncCurrentUser
+      summary: Sync current-user activities
+      responses:
+        '202':
+          description: Sync accepted (empty body)
+  /api/v1/activities:
+    get:
+      tags: [Activities]
+      operationId: listCurrentUserActivities
+      summary: List current-user activities
+      responses:
+        '200':
+          description: Activity summaries
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ActivitySummary'
+  /api/v1/activities/{id}:
+    get:
+      tags: [Activities]
+      operationId: getCurrentUserActivity
+      summary: Get one current-user activity
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Activity summary
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ActivitySummary'
+        '404':
+          description: Activity not found or not owned by the current user
+  /api/v1/activities/{id}/laps:
+    get:
+      tags: [Activities]
+      operationId: listCurrentUserActivityLaps
+      summary: List laps for a current-user activity
+      description: |
+        All laps across all sessions of the activity, ordered by datetimeStart then lapNr.
+        Includes sessionNr so the client can group by session.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Activity laps
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ActivityLap'
+        '404':
+          description: Activity not found or not owned by the current user
+  /api/v1/seasons:
+    get:
+      tags: [Seasons]
+      operationId: listCurrentUserSeasons
+      summary: List current-user seasons
+      parameters:
+        - name: locationId
+          in: query
+          required: false
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Season summaries
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SeasonSummary'
+  /api/v1/seasons/{id}:
+    get:
+      tags: [Seasons]
+      operationId: getCurrentUserSeason
+      summary: Get one current-user season
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: locationId
+          in: query
+          required: false
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Season summary
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SeasonSummary'
+        '404':
+          description: Season not found
+  /api/v1/seasons/{id}/top:
+    get:
+      tags: [Seasons]
+      operationId: listCurrentUserSeasonTop
+      summary: Top activities for a season by best-N duration
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: n
+          in: query
+          required: true
+          schema:
+            type: integer
+            enum: [1, 2, 4, 8, 13, 25, 50, 100]
+        - name: limit
+          in: query
+          required: false
+          schema:
+            type: integer
+            default: 15
+            minimum: 1
+            maximum: 50
+        - name: locationId
+          in: query
+          required: false
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Ranked season entries
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SeasonTopEntry'
+        '400':
+          description: Invalid n
+        '404':
+          description: Season not found
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        firstName:
+          type: string
+        middleName:
+          type: string
+        lastName:
+          type: string
+        username:
+          type: string
+        email:
+          type: string
+          format: email
+    AuthResponse:
+      type: object
+      properties:
+        token:
+          type: string
+        refreshToken:
+          type: string
+        user:
+          $ref: '#/components/schemas/User'
+    LoginRequest:
+      type: object
+      required: [username, password]
+      properties:
+        username:
+          type: string
+        password:
+          type: string
+          format: password
+    RegisterRequest:
+      type: object
+      required: [firstName, lastName, username, email, password]
+      properties:
+        firstName:
+          type: string
+        middleName:
+          type: string
+        lastName:
+          type: string
+        username:
+          type: string
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+          format: password
+    RefreshTokenRequest:
+      type: object
+      properties:
+        refreshToken:
+          type: string
+    ForgotPasswordRequest:
+      type: object
+      required: [email]
+      properties:
+        email:
+          type: string
+          format: email
+    ResetPasswordRequest:
+      type: object
+      required: [token, newPassword]
+      properties:
+        token:
+          type: string
+        newPassword:
+          type: string
+          format: password
+    ChipDto:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        chipCode:
+          type: string
+        chipLabel:
+          type: string
+        status:
+          type: string
+        validUntil:
+          type: string
+          format: date-time
+        createdAt:
+          type: string
+          format: date-time
+        userId:
+          type: integer
+          format: int64
+    ActivityLap:
+      type: object
+      properties:
+        lapNr:
+          type: integer
+        sessionNr:
+          type: integer
+        datetimeStart:
+          type: string
+          format: date-time
+        duration:
+          type: string
+        rest:
+          type: boolean
+        movingAvgDuration:
+          type: string
+        speedKph:
+          type: number
+    ActivitySummary:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+        startTime:
+          type: string
+          format: date-time
+        endTime:
+          type: string
+          format: date-time
+        locationId:
+          type: integer
+          format: int64
+        chipId:
+          type: integer
+          format: int64
+        seasonId:
+          type: integer
+          format: int64
+        best1Duration:
+          type: string
+        best2Duration:
+          type: string
+        best4Duration:
+          type: string
+        best8Duration:
+          type: string
+        best13Duration:
+          type: string
+        best25Duration:
+          type: string
+        best50Duration:
+          type: string
+        best100Duration:
+          type: string
+    SeasonSummary:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        label:
+          type: string
+        startDate:
+          type: string
+          format: date
+        endDate:
+          type: string
+          format: date
+        best1Duration:
+          type: string
+        best2Duration:
+          type: string
+        best4Duration:
+          type: string
+        best8Duration:
+          type: string
+        best13Duration:
+          type: string
+        best25Duration:
+          type: string
+        best50Duration:
+          type: string
+        best100Duration:
+          type: string
+    SeasonTopEntry:
+      type: object
+      properties:
+        activityId:
+          type: integer
+          format: int64
+        startTime:
+          type: string
+          format: date-time
+        locationId:
+          type: integer
+          format: int64
+        chipId:
+          type: integer
+          format: int64
+        n:
+          type: integer
+        duration:
+          type: string

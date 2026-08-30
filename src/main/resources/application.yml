@@ -57,12 +57,18 @@ logging:
 springdoc:
     api-docs:
         path: /api-docs
+        version: OPENAPI_3_1
+        enabled: true
     swagger-ui:
         path: /swagger-ui.html
+        url: /openapi.yaml
+        disable-swagger-default-url: true
         operationsSorter: method
         tagsSorter: alpha
         display-request-duration: true
     show-actuator: false
+    # Spec file is the source of truth; do not invent paths from controllers.
+    packages-to-scan: nl.templify.iceinsights.config
 
 application:
     security:
