@@ -33,6 +33,7 @@
 		<lombok-mapstruct-binding.version>0.2.0</lombok-mapstruct-binding.version>
 		<jjwt.version>0.11.5</jjwt.version>
 		<springdoc.version>3.1.0</springdoc.version>
+		<openapi-generator.version>7.16.0</openapi-generator.version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -171,6 +172,77 @@
 						</path>
 					</annotationProcessorPaths>
 				</configuration>
+			</plugin>
+
+			<plugin>
+				<groupId>org.openapitools</groupId>
+				<artifactId>openapi-generator-maven-plugin</artifactId>
+				<version>${openapi-generator.version}</version>
+				<executions>
+					<execution>
+						<id>generate-spring-api</id>
+						<phase>generate-sources</phase>
+						<goals>
+							<goal>generate</goal>
+						</goals>
+						<configuration>
+							<inputSpec>${project.basedir}/src/main/resources/openapi/openapi.yaml</inputSpec>
+							<generatorName>spring</generatorName>
+							<apiPackage>nl.templify.iceinsights.api</apiPackage>
+							<modelPackage>nl.templify.iceinsights.api.model</modelPackage>
+							<generateApis>true</generateApis>
+							<generateModels>false</generateModels>
+							<generateApiTests>false</generateApiTests>
+							<generateModelTests>false</generateModelTests>
+							<generateApiDocumentation>false</generateApiDocumentation>
+							<generateModelDocumentation>false</generateModelDocumentation>
+							<generateSupportingFiles>false</generateSupportingFiles>
+							<skipOverwrite>false</skipOverwrite>
+							<schemaMappings>
+								<schemaMapping>User=nl.templify.iceinsights.dto.UserDto</schemaMapping>
+								<schemaMapping>AuthResponse=nl.templify.iceinsights.dto.auth.AuthResponse</schemaMapping>
+								<schemaMapping>LoginRequest=nl.templify.iceinsights.dto.auth.LoginRequest</schemaMapping>
+								<schemaMapping>RegisterRequest=nl.templify.iceinsights.dto.auth.RegisterRequest</schemaMapping>
+								<schemaMapping>RefreshTokenRequest=nl.templify.iceinsights.dto.auth.RefreshTokenRequest</schemaMapping>
+								<schemaMapping>ForgotPasswordRequest=nl.templify.iceinsights.dto.auth.ForgotPasswordRequest</schemaMapping>
+								<schemaMapping>ResetPasswordRequest=nl.templify.iceinsights.dto.auth.ResetPasswordRequest</schemaMapping>
+								<schemaMapping>ChipDto=nl.templify.iceinsights.dto.ChipDto</schemaMapping>
+								<schemaMapping>ActivityLap=nl.templify.iceinsights.dto.ActivityLapDto</schemaMapping>
+								<schemaMapping>ActivitySummary=nl.templify.iceinsights.dto.ActivitySummaryDto</schemaMapping>
+								<schemaMapping>SeasonSummary=nl.templify.iceinsights.dto.SeasonSummaryDto</schemaMapping>
+								<schemaMapping>SeasonTopEntry=nl.templify.iceinsights.dto.SeasonTopEntryDto</schemaMapping>
+							</schemaMappings>
+							<importMappings>
+								<importMapping>User=nl.templify.iceinsights.dto.UserDto</importMapping>
+								<importMapping>AuthResponse=nl.templify.iceinsights.dto.auth.AuthResponse</importMapping>
+								<importMapping>LoginRequest=nl.templify.iceinsights.dto.auth.LoginRequest</importMapping>
+								<importMapping>RegisterRequest=nl.templify.iceinsights.dto.auth.RegisterRequest</importMapping>
+								<importMapping>RefreshTokenRequest=nl.templify.iceinsights.dto.auth.RefreshTokenRequest</importMapping>
+								<importMapping>ForgotPasswordRequest=nl.templify.iceinsights.dto.auth.ForgotPasswordRequest</importMapping>
+								<importMapping>ResetPasswordRequest=nl.templify.iceinsights.dto.auth.ResetPasswordRequest</importMapping>
+								<importMapping>ChipDto=nl.templify.iceinsights.dto.ChipDto</importMapping>
+								<importMapping>ActivityLap=nl.templify.iceinsights.dto.ActivityLapDto</importMapping>
+								<importMapping>ActivitySummary=nl.templify.iceinsights.dto.ActivitySummaryDto</importMapping>
+								<importMapping>SeasonSummary=nl.templify.iceinsights.dto.SeasonSummaryDto</importMapping>
+								<importMapping>SeasonTopEntry=nl.templify.iceinsights.dto.SeasonTopEntryDto</importMapping>
+							</importMappings>
+							<configOptions>
+								<interfaceOnly>true</interfaceOnly>
+								<skipDefaultInterface>true</skipDefaultInterface>
+								<useSpringBoot3>true</useSpringBoot3>
+								<useJakartaEe>true</useJakartaEe>
+								<useTags>true</useTags>
+								<openApiNullable>false</openApiNullable>
+								<dateLibrary>java8</dateLibrary>
+								<useResponseEntity>true</useResponseEntity>
+								<documentationProvider>springdoc</documentationProvider>
+								<annotationLibrary>swagger2</annotationLibrary>
+								<hideGenerationTimestamp>true</hideGenerationTimestamp>
+								<sourceFolder>src/main/java</sourceFolder>
+							</configOptions>
+						</configuration>
+					</execution>
+				</executions>
 			</plugin>
 		</plugins>
 	</build>
