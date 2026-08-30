@@ -1,0 +1,130 @@
+@import "@ionic/angular/css/core.css";
+@import "@ionic/angular/css/normalize.css";
+@import "@ionic/angular/css/structure.css";
+@import "@ionic/angular/css/typography.css";
+@import "@ionic/angular/css/display.css";
+@import "@ionic/angular/css/padding.css";
+@import "@ionic/angular/css/float-elements.css";
+@import "@ionic/angular/css/text-alignment.css";
+@import "@ionic/angular/css/text-transformation.css";
+@import "@ionic/angular/css/flex-utils.css";
+
+ion-content {
+  --background: var(--ion-background-color);
+}
+
+ion-toolbar {
+  --border-width: 0 0 1px 0;
+  --border-color: var(--ion-border-color);
+  --min-height: 56px;
+}
+
+ion-title {
+  font-weight: 500;
+  letter-spacing: 0.01em;
+}
+
+ion-tab-bar {
+  --border: 1px solid var(--ion-border-color);
+}
+
+ion-item {
+  --padding-start: 16px;
+  --inner-padding-end: 16px;
+  --min-height: 56px;
+}
+
+.page-pad {
+  padding: 24px 20px 48px;
+  max-width: 720px;
+  margin: 0 auto;
+}
+
+.muted {
+  color: var(--ion-color-medium);
+  font-size: 0.88rem;
+  line-height: 1.45;
+}
+
+.todo-note {
+  color: var(--ion-color-medium);
+  font-size: 0.78rem;
+  font-style: italic;
+  margin-top: 8px;
+}
+
+.kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  margin: 8px 0 28px;
+}
+
+.kpi-card {
+  background: #fff;
+  border: 1px solid var(--ion-border-color);
+  border-radius: 14px;
+  padding: 16px 8px 18px;
+  text-align: center;
+}
+
+.kpi-card .n {
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  color: var(--ion-color-medium);
+  text-transform: uppercase;
+  font-weight: 500;
+}
+
+.kpi-card .value {
+  margin-top: 10px;
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum";
+  font-size: 1.45rem;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  color: var(--ion-color-primary);
+  line-height: 1.15;
+}
+
+.kpi-card .value.empty {
+  color: var(--ion-color-medium);
+  font-size: 1.2rem;
+}
+
+ion-card {
+  box-shadow: none;
+  border: 1px solid var(--ion-border-color);
+  border-radius: 14px;
+  margin: 0 0 16px;
+}
+
+.auth-shell {
+  max-width: 420px;
+  margin: 0 auto;
+  padding-top: 28px;
+}
+
+.n-segment {
+  margin: 8px 0 16px;
+}
+
+.center {
+  text-align: center;
+  padding: 32px;
+}
+
+h1 {
+  font-weight: 540;
+  font-size: 1.7rem;
+  margin: 8px 0 8px;
+}
+
+h2 {
+  font-size: 0.82rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ion-color-medium);
+  margin: 28px 0 12px;
+}

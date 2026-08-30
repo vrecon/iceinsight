@@ -1,0 +1,15 @@
+.link-row {
+  display: flex;
+  align-items: flex-end;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.link-row ion-item {
+  flex: 1;
+}
+
+.center {
+  text-align: center;
+  padding: 24px;
+}

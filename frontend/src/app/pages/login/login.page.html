@@ -1,0 +1,53 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>IceInsights</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="page-pad auth-shell">
+    <h1>Inloggen</h1>
+    <p class="muted">Schaatsinzichten voor je eigen ritten. Kalm, zonder poespas.</p>
+
+    <form [formGroup]="form" (ngSubmit)="submit()">
+      <ion-list inset="true">
+        <ion-item>
+          <ion-input
+            label="Gebruikersnaam"
+            labelPlacement="stacked"
+            formControlName="username"
+            autocomplete="username"
+            [disabled]="busy()"
+          ></ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-input
+            label="Wachtwoord"
+            labelPlacement="stacked"
+            type="password"
+            formControlName="password"
+            autocomplete="current-password"
+            [disabled]="busy()"
+          ></ion-input>
+        </ion-item>
+      </ion-list>
+
+      @if (error()) {
+        <ion-note color="danger" class="error">{{ error() }}</ion-note>
+      }
+
+      <ion-button expand="block" type="submit" [disabled]="busy()">
+        @if (busy()) {
+          <ion-spinner name="crescent"></ion-spinner>
+        } @else {
+          Inloggen
+        }
+      </ion-button>
+    </form>
+
+    <p class="muted center">
+      Nog geen account?
+      <a routerLink="/register">Registreren</a>
+    </p>
+  </div>
+</ion-content>

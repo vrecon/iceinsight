@@ -1,0 +1,54 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/tabs/seizoenen"></ion-back-button>
+    </ion-buttons>
+    <ion-title>{{ season()?.label || 'Seizoen' }}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="page-pad">
+    @if (loading()) {
+      <div class="center"><ion-spinner name="crescent"></ion-spinner></div>
+    } @else if (error() && !season()) {
+      <ion-note color="danger">{{ error() }}</ion-note>
+    } @else if (season(); as item) {
+      <p class="muted">{{ formatDate(item.startDate) }} – {{ formatDate(item.endDate) }}</p>
+
+      <h2>Seizoensbesten</h2>
+      <app-kpi-grid [model]="item"></app-kpi-grid>
+
+      <h2>Top ritten</h2>
+      <ion-segment [value]="n()" (ionChange)="onNChange($event)" scrollable="true" class="n-segment">
+        @for (value of ns; track value) {
+          <ion-segment-button [value]="value">{{ value }}</ion-segment-button>
+        }
+      </ion-segment>
+      <p class="muted">Beste {{ n() }} opeenvolgende ronden, max. 15 ritten.</p>
+
+      @if (error()) {
+        <ion-note color="danger">{{ error() }}</ion-note>
+      }
+
+      @if (topLoading()) {
+        <div class="center"><ion-spinner name="crescent"></ion-spinner></div>
+      } @else if (!top().length) {
+        <app-empty-state title="Geen top ritten" hint="Nog geen data voor deze N." icon="time-outline"></app-empty-state>
+      } @else {
+        <ion-list>
+          @for (entry of top(); track $index; let i = $index) {
+            <ion-item [routerLink]="entry.activityId ? ['/tabs/ritten', entry.activityId] : null" [detail]="!!entry.activityId">
+              <ion-label>
+                <h2>#{{ i + 1 }} · {{ displayDuration(entry.duration) }}</h2>
+                <p>{{ formatDateTime(entry.startTime) }}</p>
+                <p class="muted">{{ locationLabel(entry.locationId) }} · chip #{{ entry.chipId ?? '—' }}</p>
+              </ion-label>
+            </ion-item>
+          }
+        </ion-list>
+        <p class="todo-note">TODO: baannaam ontbreekt (alleen locationId). Ritnaam zit niet op SeasonTopEntry.</p>
+      }
+    }
+  </div>
+</ion-content>

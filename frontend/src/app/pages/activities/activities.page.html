@@ -1,0 +1,43 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Ritten</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-refresher slot="fixed" (ionRefresh)="reload($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+
+  <div class="page-pad">
+    @if (error()) {
+      <ion-note color="danger">{{ error() }}</ion-note>
+    }
+
+    @if (loading()) {
+      <div class="center"><ion-spinner name="crescent"></ion-spinner></div>
+    } @else if (!activities().length) {
+      <app-empty-state
+        title="Nog geen ritten"
+        hint="Lijsten blijven leeg tot import en GET /api/activity/sync hebben gedraaid."
+        icon="speedometer-outline"
+      ></app-empty-state>
+    } @else {
+      <p class="todo-note">TODO: baannaam ontbreekt in de API (alleen locationId).</p>
+      <ion-list>
+        @for (activity of activities(); track activity.id) {
+          <ion-item [routerLink]="['/tabs/ritten', activity.id]" detail="true">
+            <ion-label>
+              <h2>{{ activity.name || ('Rit #' + activity.id) }}</h2>
+              <p>{{ formatDateTime(activity.startTime) }}</p>
+              <p class="muted">
+                Beste 1: {{ displayDuration(activity.best1Duration) }}
+                · {{ locationLabel(activity.locationId) }}
+              </p>
+            </ion-label>
+          </ion-item>
+        }
+      </ion-list>
+    }
+  </div>
+</ion-content>

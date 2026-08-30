@@ -1,0 +1,69 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Chips</ion-title>
+    <ion-buttons slot="end">
+      <ion-button fill="clear" (click)="logout()">Uitloggen</ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-refresher slot="fixed" (ionRefresh)="reload($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+
+  <div class="page-pad">
+    @if (userName) {
+      <p class="muted">Ingelogd als {{ userName }}</p>
+    }
+
+    <form [formGroup]="form" (ngSubmit)="link()" class="link-row">
+      <ion-item>
+        <ion-input
+          label="Chipcode"
+          labelPlacement="stacked"
+          formControlName="chipCode"
+          placeholder="Transpondercode"
+        ></ion-input>
+      </ion-item>
+      <ion-button type="submit" [disabled]="linking()">
+        @if (linking()) {
+          <ion-spinner name="crescent"></ion-spinner>
+        } @else {
+          Koppelen
+        }
+      </ion-button>
+    </form>
+
+    @if (error()) {
+      <ion-note color="danger">{{ error() }}</ion-note>
+    }
+
+    @if (loading()) {
+      <div class="center"><ion-spinner name="crescent"></ion-spinner></div>
+    } @else if (!chips().length) {
+      <app-empty-state
+        title="Nog geen chips"
+        hint="Koppel een transponder. Ritten verschijnen pas na import en sync."
+        icon="hardware-chip-outline"
+      ></app-empty-state>
+    } @else {
+      <ion-list>
+        @for (chip of chips(); track chip.id ?? chip.chipCode) {
+          <ion-item-sliding>
+            <ion-item>
+              <ion-label>
+                <h2>{{ chip.chipLabel || chip.chipCode }}</h2>
+                <p>Code {{ chip.chipCode }} · {{ chip.status || 'onbekend' }}</p>
+                <p class="muted">Geldig tot {{ formatDateTime(chip.validUntil) }}</p>
+              </ion-label>
+            </ion-item>
+            <ion-item-options side="end">
+              <ion-item-option color="danger" (click)="unlink(chip)">Ontkoppelen</ion-item-option>
+            </ion-item-options>
+          </ion-item-sliding>
+        }
+      </ion-list>
+    }
+  </div>
+</ion-content>
