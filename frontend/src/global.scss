@@ -128,3 +128,7 @@ h2 {
   color: var(--ion-color-medium);
   margin: 28px 0 12px;
 }
+
+ion-refresher {
+  pointer-events: none !important;
+}

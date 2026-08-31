@@ -46,3 +46,10 @@
   font-size: 1.4rem;
   line-height: 1;
 }
+
+.rit-row {
+  position: relative;
+  z-index: 2;
+  pointer-events: auto;
+  cursor: pointer;
+}
