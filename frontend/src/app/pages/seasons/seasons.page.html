@@ -5,10 +5,6 @@
 </ion-header>
 
 <ion-content>
-  <ion-refresher slot="fixed" (ionRefresh)="reload($event)">
-    <ion-refresher-content></ion-refresher-content>
-  </ion-refresher>
-
   <div class="page-pad">
     <p class="muted">Seizoensvenster is conceptueel 1 mei–30 april; de API levert de datums.</p>
 
@@ -26,15 +22,17 @@
       ></app-empty-state>
     } @else {
       <nav class="rit-list">
-        @for (season of seasons(); track season.id) {
-          <a class="rit-row" [routerLink]="['/seizoenen', season.id]">
-            <span class="rit-row-body">
-              <span class="name">{{ season.label || ('Seizoen #' + season.id) }}</span>
-              <span class="meta">{{ formatDate(season.startDate) }} – {{ formatDate(season.endDate) }}</span>
-              <span class="muted">Beste 1: {{ displayDuration(season.best1Duration) }} · beste 13: {{ displayDuration(season.best13Duration) }}</span>
-            </span>
-            <span class="chev" aria-hidden="true">›</span>
-          </a>
+        @for (season of seasons(); track season.id ?? $index) {
+          @if (season.id; as id) {
+            <a class="rit-row" [attr.href]="'/seizoenen/' + id">
+              <span class="rit-row-body">
+                <span class="name">{{ season.label || ('Seizoen #' + id) }}</span>
+                <span class="meta">{{ formatDate(season.startDate) }} – {{ formatDate(season.endDate) }}</span>
+                <span class="muted">Beste 1: {{ displayDuration(season.best1Duration) }} · beste 13: {{ displayDuration(season.best13Duration) }}</span>
+              </span>
+              <span class="chev" aria-hidden="true">›</span>
+            </a>
+          }
         }
       </nav>
     }
