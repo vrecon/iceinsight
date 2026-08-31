@@ -23,10 +23,9 @@
         icon="speedometer-outline"
       ></app-empty-state>
     } @else {
-      <p class="todo-note">TODO: baannaam ontbreekt in de API (alleen locationId).</p>
       <ion-list>
         @for (activity of activities(); track activity.id) {
-          <ion-item [routerLink]="['/tabs/ritten', activity.id]" detail="true">
+          <ion-item [routerLink]="['/tabs/ritten', activity.id]" routerDirection="forward" detail="true">
             <ion-label>
               <h2>{{ activity.name || ('Rit #' + activity.id) }}</h2>
               <p>{{ formatDateTime(activity.startTime) }}</p>
