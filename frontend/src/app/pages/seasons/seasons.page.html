@@ -27,7 +27,7 @@
     } @else {
       <ion-list>
         @for (season of seasons(); track season.id) {
-          <ion-item [routerLink]="['/seizoenen', season.id]" detail="true">
+          <ion-item button detail="true" (click)="openSeason(season.id)">
             <ion-label>
               <h2>{{ season.label || ('Seizoen #' + season.id) }}</h2>
               <p>{{ formatDate(season.startDate) }} – {{ formatDate(season.endDate) }}</p>

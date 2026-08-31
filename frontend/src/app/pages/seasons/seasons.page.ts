@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { Router } from '@angular/router';
 import {
   IonContent,
   IonHeader,
@@ -24,7 +24,6 @@ import { EmptyStateComponent } from '../../shared/empty-state.component';
   templateUrl: './seasons.page.html',
   styleUrls: ['./seasons.page.scss'],
   imports: [
-    RouterLink,
     EmptyStateComponent,
     IonHeader,
     IonToolbar,
@@ -42,6 +41,7 @@ import { EmptyStateComponent } from '../../shared/empty-state.component';
 })
 export class SeasonsPage {
   private readonly seasonsApi = inject(SeasonsService);
+  private readonly router = inject(Router);
 
   readonly seasons = signal<SeasonSummary[]>([]);
   readonly loading = signal(true);
@@ -66,6 +66,13 @@ export class SeasonsPage {
         (event?.detail as { complete?: () => void } | undefined)?.complete?.();
       },
     });
+  }
+
+  openSeason(id?: number): void {
+    if (id == null) {
+      return;
+    }
+    void this.router.navigateByUrl(`/seizoenen/${id}`);
   }
 
   formatDate = formatDate;
