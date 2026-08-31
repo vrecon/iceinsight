@@ -1,4 +1,4 @@
-import { durationToMillis } from './lap-time';
+import { durationToMillis, formatMillis } from './lap-time';
 
 describe('durationToMillis', () => {
   it('parses Speedhive clock and seconds strings', () => {
@@ -10,5 +10,18 @@ describe('durationToMillis', () => {
   it('returns null for empty input', () => {
     expect(durationToMillis(undefined)).toBeNull();
     expect(durationToMillis('  ')).toBeNull();
+  });
+});
+
+describe('formatMillis', () => {
+  it('formats minutes and hours', () => {
+    expect(formatMillis(50839)).toBe('0:51');
+    expect(formatMillis(63173)).toBe('1:03');
+    expect(formatMillis(3723000)).toBe('1:02:03');
+  });
+
+  it('returns em dash for empty input', () => {
+    expect(formatMillis(null)).toBe('—');
+    expect(formatMillis(undefined)).toBe('—');
   });
 });

@@ -1,6 +1,10 @@
 import { ChangeDetectionStrategy, Component, computed, input, linkedSignal } from '@angular/core';
+import { IonInput } from '@ionic/angular';
 import { ActivityLap } from '../api/models/activity-lap';
 import { durationToMillis } from '../core/lap-time';
+
+export const DEFAULT_MIN_SEC = 25;
+export const DEFAULT_MAX_SEC = 102;
 
 export type LapBarView = {
   key: string;
@@ -23,12 +27,18 @@ export type LapSessionGroup = {
   selector: 'app-lap-chart',
   templateUrl: './lap-chart.component.html',
   styleUrls: ['./lap-chart.component.scss'],
+  imports: [IonInput],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LapChartComponent {
   readonly laps = input<ActivityLap[]>([]);
+  readonly minSec = input<number>(DEFAULT_MIN_SEC);
+  readonly maxSec = input<number>(DEFAULT_MAX_SEC);
 
-  readonly groups = computed(() => buildLapChart(this.laps()));
+  readonly minSecValue = linkedSignal(() => this.minSec());
+  readonly maxSecValue = linkedSignal(() => this.maxSec());
+
+  readonly groups = computed(() => buildLapChart(this.laps(), this.minSecValue(), this.maxSecValue()));
   readonly skateCount = computed(() => this.groups().reduce((n, g) => n + g.skateCount, 0));
   readonly restCount = computed(() => this.laps().filter((lap) => lap.rest).length);
   readonly selected = linkedSignal<LapBarView | null>(() => fastestBar(this.groups()));
@@ -37,11 +47,19 @@ export class LapChartComponent {
     this.selected.set(bar);
   }
 
+  onMinSec(event: CustomEvent): void {
+    this.minSecValue.set(parseSec((event.detail as { value?: unknown }).value, this.minSecValue()));
+  }
+
+  onMaxSec(event: CustomEvent): void {
+    this.maxSecValue.set(parseSec((event.detail as { value?: unknown }).value, this.maxSecValue()));
+  }
+
   speedLabel(speed?: number): string {
     if (speed === undefined || speed === null || Number.isNaN(speed)) {
       return '';
     }
-    return `${speed.toLocaleString('nl-NL', { maximumFractionDigits: 1 })} km/h`;
+    return `${speed.toLocaleString('nl-NL', { maximumFractionDigits: 1 })} km/u`;
   }
 
   barLabel(bar: LapBarView): string {
@@ -55,6 +73,37 @@ export class LapChartComponent {
   }
 }
 
+export function parseSec(value: unknown, fallback: number): number {
+  if (value === '' || value == null) {
+    return fallback;
+  }
+  const n = typeof value === 'number' ? value : Number(String(value).replace(',', '.'));
+  if (!Number.isFinite(n) || n < 0) {
+    return fallback;
+  }
+  return n;
+}
+
+export function threshWindow(minSec: number, maxSec: number): { floorMs: number; ceilMs: number } {
+  let lo = Number.isFinite(minSec) ? minSec : DEFAULT_MIN_SEC;
+  let hi = Number.isFinite(maxSec) ? maxSec : DEFAULT_MAX_SEC;
+  lo = Math.max(0, lo);
+  if (hi < lo + 1) {
+    hi = lo + 1;
+  }
+  return { floorMs: lo * 1000, ceilMs: hi * 1000 };
+}
+
+export function scaleToThreshPct(millis: number | null, minSec: number, maxSec: number): number {
+  const { floorMs, ceilMs } = threshWindow(minSec, maxSec);
+  const span = Math.max(ceilMs - floorMs, 1);
+  if (millis == null) {
+    return 8;
+  }
+  const clipped = Math.min(ceilMs, Math.max(floorMs, millis));
+  return 12 + ((clipped - floorMs) / span) * 88;
+}
+
 function fastestBar(groups: LapSessionGroup[]): LapBarView | null {
   for (const group of groups) {
     const hit = group.bars.find((bar) => bar.fastest);
@@ -65,15 +114,12 @@ function fastestBar(groups: LapSessionGroup[]): LapBarView | null {
   return groups[0]?.bars[0] ?? null;
 }
 
-function buildLapChart(laps: ActivityLap[]): LapSessionGroup[] {
+export function buildLapChart(laps: ActivityLap[], minSec = DEFAULT_MIN_SEC, maxSec = DEFAULT_MAX_SEC): LapSessionGroup[] {
   const skateMillis = laps
     .filter((lap) => !lap.rest)
     .map((lap) => durationToMillis(lap.duration))
     .filter((ms): ms is number => ms != null && ms > 0);
-  const maxMs = skateMillis.length ? Math.max(...skateMillis) : 0;
   const minMs = skateMillis.length ? Math.min(...skateMillis) : 0;
-  const floor = maxMs > 0 ? Math.max(0, Math.min(minMs * 0.65, minMs - 8000)) : 0;
-  const span = Math.max(maxMs - floor, 1);
 
   const groups: LapSessionGroup[] = [];
   laps.forEach((lap, index) => {
@@ -87,13 +133,8 @@ function buildLapChart(laps: ActivityLap[]): LapSessionGroup[] {
     const millis = durationToMillis(lap.duration);
     const avgMillis = durationToMillis(lap.movingAvgDuration);
     const fastest = !rest && millis != null && millis === minMs && minMs > 0;
-    const heightPct = rest
-      ? 14
-      : millis == null
-        ? 8
-        : 12 + ((millis - floor) / span) * 88;
-    const avgPct =
-      rest || avgMillis == null ? null : 12 + ((avgMillis - floor) / span) * 88;
+    const heightPct = rest ? 14 : scaleToThreshPct(millis, minSec, maxSec);
+    const avgPct = rest || avgMillis == null ? null : scaleToThreshPct(avgMillis, minSec, maxSec);
     group.bars.push({
       key: `${sessionNr}-${lap.lapNr ?? 'x'}-${index}`,
       lap,

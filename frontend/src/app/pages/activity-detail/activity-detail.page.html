@@ -16,9 +16,44 @@
     } @else if (activity(); as item) {
       <p class="muted">{{ formatDateTime(item.startTime) }} — {{ formatDateTime(item.endTime) }}</p>
       <p class="muted">{{ locationLabel(item.locationId) }} · chip #{{ item.chipId ?? '—' }}</p>
-      <p class="todo-note">
-        TODO: baannaam en chiplabel ontbreken op ActivitySummary (alleen locationId en chipId).
-      </p>
+
+      @if (!lapsLoading() && !lapsError() && laps().length) {
+        <h2>Overzicht</h2>
+        <div class="kpi-grid rit-kpis">
+          <div class="kpi-card">
+            <div class="n">Snelste ronde</div>
+            <div class="value" [class.empty]="!kpis().fastestDuration">{{ displayDuration(kpis().fastestDuration) }}</div>
+          </div>
+          <div class="kpi-card">
+            <div class="n">Max snelheid</div>
+            <div class="value" [class.empty]="kpis().maxSpeedKph == null">{{ formatSpeedKph(kpis().maxSpeedKph) }}</div>
+          </div>
+          <div class="kpi-card">
+            <div class="n">Gem. snelheid</div>
+            <div class="value" [class.empty]="kpis().avgSpeedKph == null">{{ formatSpeedKph(kpis().avgSpeedKph) }}</div>
+          </div>
+          <div class="kpi-card">
+            <div class="n">Ronden</div>
+            <div class="value">{{ kpis().activeCount }}</div>
+            @if (kpis().restCount) {
+              <div class="hint">{{ kpis().restCount }} rust</div>
+            }
+          </div>
+          <div class="kpi-card">
+            <div class="n">Afstand</div>
+            <div class="value">{{ formatDistanceKm(kpis().distanceKm) }}</div>
+            <div class="hint">400m-baan</div>
+          </div>
+          <div class="kpi-card">
+            <div class="n">Actief</div>
+            <div class="value" [class.empty]="kpis().activeMillis == null">{{ formatActiveDuration(kpis().activeMillis) }}</div>
+          </div>
+          <div class="kpi-card span-2">
+            <div class="n">Start–finish</div>
+            <div class="value start-finish">{{ formatStartFinish(kpis().start, kpis().finish) }}</div>
+          </div>
+        </div>
+      }
 
       <h2>Opeenvolgende beste tijden</h2>
       <app-kpi-grid [model]="item"></app-kpi-grid>

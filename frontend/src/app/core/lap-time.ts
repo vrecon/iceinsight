@@ -24,6 +24,21 @@ export function durationToMillis(raw?: string | null): number | null {
   return Math.round(asSeconds * 1000);
 }
 
+export function formatMillis(ms: number | null | undefined): string {
+  if (ms == null || !Number.isFinite(ms) || ms < 0) {
+    return '—';
+  }
+  const totalSec = Math.round(ms / 1000);
+  const hours = Math.floor(totalSec / 3600);
+  const minutes = Math.floor((totalSec % 3600) / 60);
+  const seconds = totalSec % 60;
+  const pad = (n: number) => String(n).padStart(2, '0');
+  if (hours > 0) {
+    return `${hours}:${pad(minutes)}:${pad(seconds)}`;
+  }
+  return `${minutes}:${pad(seconds)}`;
+}
+
 function padMillis(fraction?: string): number {
   if (!fraction) {
     return 0;
