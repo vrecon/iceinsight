@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
-import { ActivatedRoute, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import {
   IonBackButton,
   IonButtons,
@@ -32,7 +32,6 @@ import { EmptyStateComponent } from '../../shared/empty-state.component';
   templateUrl: './season-detail.page.html',
   styleUrls: ['./season-detail.page.scss'],
   imports: [
-    RouterLink,
     KpiGridComponent,
     EmptyStateComponent,
     DailySeriesComponent,
@@ -56,6 +55,7 @@ export class SeasonDetailPage {
   private readonly seasonsApi = inject(SeasonsService);
   private readonly activitiesApi = inject(ActivitiesService);
   private readonly route = inject(ActivatedRoute);
+  private readonly router = inject(Router);
 
   readonly season = signal<SeasonSummary | null>(null);
   readonly activities = signal<ActivitySummary[]>([]);
@@ -127,6 +127,13 @@ export class SeasonDetailPage {
         this.topLoading.set(false);
       },
     });
+  }
+
+  openRit(id?: number): void {
+    if (id == null) {
+      return;
+    }
+    void this.router.navigateByUrl(`/ritten/${id}`);
   }
 
   formatDate = formatDate;

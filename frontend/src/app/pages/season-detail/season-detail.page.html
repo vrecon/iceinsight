@@ -38,7 +38,7 @@
       } @else {
         <ion-list>
           @for (entry of top(); track $index; let i = $index) {
-            <ion-item [routerLink]="entry.activityId ? ['/ritten', entry.activityId] : null" [detail]="!!entry.activityId">
+            <ion-item button [detail]="!!entry.activityId" (click)="openRit(entry.activityId)">
               <ion-label>
                 <h2>#{{ i + 1 }} · {{ displayDuration(entry.duration) }}</h2>
                 <p>{{ formatDateTime(entry.startTime) }}</p>
