@@ -36,17 +36,27 @@
       } @else if (!top().length) {
         <app-empty-state title="Geen top ritten" hint="Nog geen data voor deze N." icon="time-outline"></app-empty-state>
       } @else {
-        <ion-list>
+        <nav class="rit-list">
           @for (entry of top(); track $index; let i = $index) {
-            <ion-item button [detail]="!!entry.activityId" (click)="openRit(entry.activityId)">
-              <ion-label>
-                <h2>#{{ i + 1 }} · {{ displayDuration(entry.duration) }}</h2>
-                <p>{{ formatDateTime(entry.startTime) }}</p>
-                <p class="muted">{{ locationLabel(entry.locationId) }} · chip #{{ entry.chipId ?? '—' }}</p>
-              </ion-label>
-            </ion-item>
+            @if (entry.activityId; as activityId) {
+              <a class="rit-row" [routerLink]="['/tabs/ritten', activityId]">
+                <span class="rit-row-body">
+                  <span class="name">#{{ i + 1 }} · {{ displayDuration(entry.duration) }}</span>
+                  <span class="meta">{{ formatDateTime(entry.startTime) }}</span>
+                  <span class="muted">{{ locationLabel(entry.locationId) }} · chip #{{ entry.chipId ?? '—' }}</span>
+                </span>
+                <span class="chev" aria-hidden="true">›</span>
+              </a>
+            } @else {
+              <div class="rit-row">
+                <span class="rit-row-body">
+                  <span class="name">#{{ i + 1 }} · {{ displayDuration(entry.duration) }}</span>
+                  <span class="meta">{{ formatDateTime(entry.startTime) }}</span>
+                </span>
+              </div>
+            }
           }
-        </ion-list>
+        </nav>
       }
 
       <h2>Per dag</h2>

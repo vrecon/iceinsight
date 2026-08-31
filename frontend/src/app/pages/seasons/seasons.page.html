@@ -25,17 +25,18 @@
         icon="calendar-outline"
       ></app-empty-state>
     } @else {
-      <ion-list>
+      <nav class="rit-list">
         @for (season of seasons(); track season.id) {
-          <ion-item button detail="true" (click)="openSeason(season.id)">
-            <ion-label>
-              <h2>{{ season.label || ('Seizoen #' + season.id) }}</h2>
-              <p>{{ formatDate(season.startDate) }} – {{ formatDate(season.endDate) }}</p>
-              <p class="muted">Beste 1: {{ displayDuration(season.best1Duration) }} · beste 13: {{ displayDuration(season.best13Duration) }}</p>
-            </ion-label>
-          </ion-item>
+          <a class="rit-row" [routerLink]="['/tabs/seizoenen', season.id]">
+            <span class="rit-row-body">
+              <span class="name">{{ season.label || ('Seizoen #' + season.id) }}</span>
+              <span class="meta">{{ formatDate(season.startDate) }} – {{ formatDate(season.endDate) }}</span>
+              <span class="muted">Beste 1: {{ displayDuration(season.best1Duration) }} · beste 13: {{ displayDuration(season.best13Duration) }}</span>
+            </span>
+            <span class="chev" aria-hidden="true">›</span>
+          </a>
         }
-      </ion-list>
+      </nav>
     }
   </div>
 </ion-content>
