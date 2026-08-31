@@ -39,7 +39,7 @@
         <nav class="rit-list">
           @for (entry of top(); track $index; let i = $index) {
             @if (entry.activityId; as activityId) {
-              <a class="rit-row" [routerLink]="['/tabs/ritten', activityId]">
+              <a class="rit-row" [routerLink]="['/ritten', activityId]">
                 <span class="rit-row-body">
                   <span class="name">#{{ i + 1 }} · {{ displayDuration(entry.duration) }}</span>
                   <span class="meta">{{ formatDateTime(entry.startTime) }}</span>

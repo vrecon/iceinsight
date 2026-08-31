@@ -27,7 +27,7 @@
     } @else {
       <nav class="rit-list">
         @for (season of seasons(); track season.id) {
-          <a class="rit-row" [routerLink]="['/tabs/seizoenen', season.id]">
+          <a class="rit-row" [routerLink]="['/seizoenen', season.id]">
             <span class="rit-row-body">
               <span class="name">{{ season.label || ('Seizoen #' + season.id) }}</span>
               <span class="meta">{{ formatDate(season.startDate) }} – {{ formatDate(season.endDate) }}</span>

@@ -25,7 +25,7 @@
     } @else {
       <nav class="rit-list">
         @for (activity of activities(); track activity.id) {
-          <a class="rit-row" [routerLink]="['/tabs/ritten', activity.id]">
+          <a class="rit-row" [routerLink]="['/ritten', activity.id]">
             <span class="rit-row-body">
               <span class="name">{{ activity.name || ('Rit #' + activity.id) }}</span>
               <span class="meta">{{ formatDateTime(activity.startTime) }}</span>
