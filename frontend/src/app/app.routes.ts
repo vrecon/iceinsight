@@ -18,11 +18,21 @@ export const routes: Routes = [
     loadComponent: () => import('./layout/tabs.page').then((m) => m.TabsPage),
     children: [
       {
+        path: 'ritten/:id',
+        loadComponent: () => import('./pages/activity-detail/activity-detail.page').then((m) => m.ActivityDetailPage),
+      },
+      {
         path: 'ritten',
+        pathMatch: 'full',
         loadComponent: () => import('./pages/activities/activities.page').then((m) => m.ActivitiesPage),
       },
       {
+        path: 'seizoenen/:id',
+        loadComponent: () => import('./pages/season-detail/season-detail.page').then((m) => m.SeasonDetailPage),
+      },
+      {
         path: 'seizoenen',
+        pathMatch: 'full',
         loadComponent: () => import('./pages/seasons/seasons.page').then((m) => m.SeasonsPage),
       },
       {
@@ -31,16 +41,6 @@ export const routes: Routes = [
       },
       { path: '', redirectTo: 'ritten', pathMatch: 'full' },
     ],
-  },
-  {
-    path: 'ritten/:id',
-    canActivate: [authGuard],
-    loadComponent: () => import('./pages/activity-detail/activity-detail.page').then((m) => m.ActivityDetailPage),
-  },
-  {
-    path: 'seizoenen/:id',
-    canActivate: [authGuard],
-    loadComponent: () => import('./pages/season-detail/season-detail.page').then((m) => m.SeasonDetailPage),
   },
   { path: '', redirectTo: 'tabs/ritten', pathMatch: 'full' },
   { path: '**', redirectTo: 'tabs/ritten' },

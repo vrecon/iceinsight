@@ -6,3 +6,47 @@
 ion-item h2 {
   font-weight: 560;
 }
+
+.rit-list {
+  background: #fff;
+  border: 1px solid var(--ion-border-color);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.rit-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+  color: inherit;
+  text-decoration: none;
+  border-bottom: 1px solid var(--ion-border-color);
+}
+
+.rit-row:last-child {
+  border-bottom: 0;
+}
+
+.rit-row-body {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+  flex: 1;
+}
+
+.rit-row .name {
+  font-weight: 560;
+}
+
+.rit-row .meta {
+  color: var(--ion-color-medium);
+  font-size: 0.9rem;
+}
+
+.rit-row .chev {
+  color: var(--ion-color-medium);
+  font-size: 1.4rem;
+  line-height: 1;
+}

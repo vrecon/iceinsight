@@ -1,11 +1,8 @@
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
-import { Router } from '@angular/router';
+import { RouterLink } from '@angular/router';
 import {
   IonContent,
   IonHeader,
-  IonItem,
-  IonLabel,
-  IonList,
   IonNote,
   IonRefresher,
   IonRefresherContent,
@@ -24,6 +21,7 @@ import { EmptyStateComponent } from '../../shared/empty-state.component';
   templateUrl: './activities.page.html',
   styleUrls: ['./activities.page.scss'],
   imports: [
+    RouterLink,
     EmptyStateComponent,
     IonHeader,
     IonToolbar,
@@ -31,9 +29,6 @@ import { EmptyStateComponent } from '../../shared/empty-state.component';
     IonContent,
     IonRefresher,
     IonRefresherContent,
-    IonList,
-    IonItem,
-    IonLabel,
     IonNote,
     IonSpinner,
   ],
@@ -41,7 +36,6 @@ import { EmptyStateComponent } from '../../shared/empty-state.component';
 })
 export class ActivitiesPage {
   private readonly activitiesApi = inject(ActivitiesService);
-  private readonly router = inject(Router);
 
   readonly activities = signal<ActivitySummary[]>([]);
   readonly loading = signal(true);
@@ -66,16 +60,6 @@ export class ActivitiesPage {
         (event?.detail as { complete?: () => void } | undefined)?.complete?.();
       },
     });
-  }
-
-  openRit(id?: number): void {
-    if (id == null) {
-      return;
-    }
-    // Absolute URL on the root outlet. ion-item routerLink uses the closest
-    // ion-router-outlet (the tabs outlet), which has no ritten/:id child and
-    // bounced back to the list via the ** redirect.
-    void this.router.navigateByUrl(`/ritten/${id}`);
   }
 
   formatDateTime = formatDateTime;

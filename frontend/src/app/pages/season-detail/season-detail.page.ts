@@ -1,13 +1,10 @@
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 import {
   IonBackButton,
   IonButtons,
   IonContent,
   IonHeader,
-  IonItem,
-  IonLabel,
-  IonList,
   IonNote,
   IonSegment,
   IonSegmentButton,
@@ -32,6 +29,7 @@ import { EmptyStateComponent } from '../../shared/empty-state.component';
   templateUrl: './season-detail.page.html',
   styleUrls: ['./season-detail.page.scss'],
   imports: [
+    RouterLink,
     KpiGridComponent,
     EmptyStateComponent,
     DailySeriesComponent,
@@ -45,9 +43,6 @@ import { EmptyStateComponent } from '../../shared/empty-state.component';
     IonSpinner,
     IonSegment,
     IonSegmentButton,
-    IonList,
-    IonItem,
-    IonLabel,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -55,7 +50,6 @@ export class SeasonDetailPage {
   private readonly seasonsApi = inject(SeasonsService);
   private readonly activitiesApi = inject(ActivitiesService);
   private readonly route = inject(ActivatedRoute);
-  private readonly router = inject(Router);
 
   readonly season = signal<SeasonSummary | null>(null);
   readonly activities = signal<ActivitySummary[]>([]);
@@ -129,12 +123,6 @@ export class SeasonDetailPage {
     });
   }
 
-  openRit(id?: number): void {
-    if (id == null) {
-      return;
-    }
-    void this.router.navigateByUrl(`/ritten/${id}`);
-  }
 
   formatDate = formatDate;
   formatDateTime = formatDateTime;

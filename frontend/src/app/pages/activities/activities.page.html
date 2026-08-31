@@ -23,20 +23,21 @@
         icon="speedometer-outline"
       ></app-empty-state>
     } @else {
-      <ion-list>
+      <nav class="rit-list">
         @for (activity of activities(); track activity.id) {
-          <ion-item button detail="true" (click)="openRit(activity.id)">
-            <ion-label>
-              <h2>{{ activity.name || ('Rit #' + activity.id) }}</h2>
-              <p>{{ formatDateTime(activity.startTime) }}</p>
-              <p class="muted">
+          <a class="rit-row" [routerLink]="['/tabs/ritten', activity.id]">
+            <span class="rit-row-body">
+              <span class="name">{{ activity.name || ('Rit #' + activity.id) }}</span>
+              <span class="meta">{{ formatDateTime(activity.startTime) }}</span>
+              <span class="muted">
                 Beste 1: {{ displayDuration(activity.best1Duration) }}
                 · {{ locationLabel(activity.locationId) }}
-              </p>
-            </ion-label>
-          </ion-item>
+              </span>
+            </span>
+            <span class="chev" aria-hidden="true">›</span>
+          </a>
         }
-      </ion-list>
+      </nav>
     }
   </div>
 </ion-content>
