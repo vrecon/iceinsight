@@ -170,3 +170,24 @@
 .analysis .muted {
   margin: 2px 0 0;
 }
+
+.thresh {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin: 0 0 4px;
+}
+
+.thresh ion-input {
+  --background: #fff;
+  --padding-start: 12px;
+  --padding-end: 12px;
+  --highlight-color-focused: var(--ion-color-primary);
+  border: 1px solid var(--ion-border-color);
+  border-radius: 12px;
+}
+
+.thresh-hint {
+  margin: 6px 0 12px;
+  font-size: 0.78rem;
+}

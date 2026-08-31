@@ -19,19 +19,29 @@ export const routes: Routes = [
     children: [
       {
         path: 'ritten',
-        loadComponent: () => import('./pages/activities/activities.page').then((m) => m.ActivitiesPage),
-      },
-      {
-        path: 'ritten/:id',
-        loadComponent: () => import('./pages/activity-detail/activity-detail.page').then((m) => m.ActivityDetailPage),
+        children: [
+          {
+            path: '',
+            loadComponent: () => import('./pages/activities/activities.page').then((m) => m.ActivitiesPage),
+          },
+          {
+            path: ':id',
+            loadComponent: () => import('./pages/activity-detail/activity-detail.page').then((m) => m.ActivityDetailPage),
+          },
+        ],
       },
       {
         path: 'seizoenen',
-        loadComponent: () => import('./pages/seasons/seasons.page').then((m) => m.SeasonsPage),
-      },
-      {
-        path: 'seizoenen/:id',
-        loadComponent: () => import('./pages/season-detail/season-detail.page').then((m) => m.SeasonDetailPage),
+        children: [
+          {
+            path: '',
+            loadComponent: () => import('./pages/seasons/seasons.page').then((m) => m.SeasonsPage),
+          },
+          {
+            path: ':id',
+            loadComponent: () => import('./pages/season-detail/season-detail.page').then((m) => m.SeasonDetailPage),
+          },
+        ],
       },
       {
         path: 'chips',

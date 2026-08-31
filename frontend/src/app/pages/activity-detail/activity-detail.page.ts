@@ -1,5 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import {
   IonBackButton,
@@ -15,7 +15,14 @@ import { ActivityLap } from '../../api/models/activity-lap';
 import { ActivitySummary } from '../../api/models/activity-summary';
 import { ActivitiesService } from '../../api/services/activities.service';
 import { apiErrorMessage } from '../../core/api-error';
-import { formatDateTime, locationLabel } from '../../core/best-n';
+import {
+  computeActivityKpis,
+  formatActiveDuration,
+  formatDistanceKm,
+  formatSpeedKph,
+  formatStartFinish,
+} from '../../core/activity-kpis';
+import { displayDuration, formatDateTime, locationLabel } from '../../core/best-n';
 import { EmptyStateComponent } from '../../shared/empty-state.component';
 import { KpiGridComponent } from '../../shared/kpi-grid.component';
 import { LapChartComponent } from '../../shared/lap-chart.component';
@@ -50,6 +57,10 @@ export class ActivityDetailPage {
   readonly error = signal<string | null>(null);
   readonly lapsError = signal<string | null>(null);
 
+  readonly kpis = computed(() =>
+    computeActivityKpis(this.laps(), this.activity()?.startTime, this.activity()?.endTime),
+  );
+
   constructor() {
     const id = Number(this.route.snapshot.paramMap.get('id'));
     if (!id) {
@@ -82,6 +93,11 @@ export class ActivityDetailPage {
 
   formatDateTime = formatDateTime;
   locationLabel = locationLabel;
+  displayDuration = displayDuration;
+  formatSpeedKph = formatSpeedKph;
+  formatDistanceKm = formatDistanceKm;
+  formatActiveDuration = formatActiveDuration;
+  formatStartFinish = formatStartFinish;
 }
 
 function lapsErrorMessage(err: unknown): string {

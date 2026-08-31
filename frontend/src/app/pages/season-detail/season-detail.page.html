@@ -47,7 +47,20 @@
             </ion-item>
           }
         </ion-list>
-        <p class="todo-note">TODO: baannaam ontbreekt (alleen locationId). Ritnaam zit niet op SeasonTopEntry.</p>
+      }
+
+      <h2>Per dag</h2>
+      <p class="muted">Snelste {{ n() }} per ijsdag, uit je ritten in dit seizoen.</p>
+      @if (activitiesLoading()) {
+        <div class="center"><ion-spinner name="crescent"></ion-spinner></div>
+      } @else if (!daily().length) {
+        <app-empty-state
+          title="Geen ijsdagen"
+          hint="Nog geen ritten met een tijd voor deze N in dit seizoen."
+          icon="calendar-outline"
+        ></app-empty-state>
+      } @else {
+        <app-daily-series [points]="daily()" [n]="n()"></app-daily-series>
       }
     }
   </div>
