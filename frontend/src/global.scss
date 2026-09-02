@@ -9,175 +9,235 @@
 @import "@ionic/angular/css/text-transformation.css";
 @import "@ionic/angular/css/flex-utils.css";
 
+html,
+body {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-sans);
+  font-size: var(--type-body-size);
+}
+
 ion-content {
-  --background: var(--ii-paper);
+  --background: var(--paper);
 }
 
-ion-header {
-  box-shadow: none;
-}
-
-ion-toolbar {
-  --background: var(--ii-paper);
-  --color: var(--ii-ink);
-  --border-width: 0;
-  --min-height: 48px;
-  --padding-start: 12px;
-  --padding-end: 12px;
+ion-header ion-toolbar {
+  --background: var(--paper);
+  --color: var(--ink);
+  --border-width: 0 0 1px 0;
+  --border-color: var(--line);
+  --min-height: 44px;
+  --padding-top: 0;
+  --padding-bottom: 0;
 }
 
 ion-title {
-  font-size: var(--ii-body);
+  font-size: var(--type-label-size);
   font-weight: 500;
-  letter-spacing: 0.02em;
+  letter-spacing: var(--type-label-tracking);
+  text-transform: uppercase;
+  color: var(--ink);
+}
+
+ion-back-button {
+  --color: var(--ink-soft);
+  --icon-font-size: 20px;
 }
 
 ion-tab-bar {
-  --background: var(--ii-paper);
-  --border: 1px solid var(--ii-line);
-  --color: var(--ii-ink-soft);
-  --color-selected: var(--ii-ink);
+  --background: var(--paper);
+  --color: var(--ink-soft);
+  --color-selected: var(--ink);
+  --border: 1px solid var(--line);
+  height: 48px;
 }
 
 ion-tab-button {
-  --color: var(--ii-ink-soft);
-  --color-selected: var(--ii-ink);
-  font-size: var(--ii-label);
-  letter-spacing: var(--ii-tracking-label);
-  text-transform: uppercase;
+  --color: var(--ink-soft);
+  --color-selected: var(--ink);
+  font-size: var(--type-label-size);
+  letter-spacing: 0.06em;
 }
 
 ion-tab-button ion-icon {
-  font-size: 20px;
+  font-size: 18px;
 }
 
 ion-item {
-  --padding-start: 16px;
-  --inner-padding-end: 16px;
-  --min-height: 52px;
-  --border-color: var(--ii-line);
-  --background: var(--ii-surface);
+  --padding-start: calc(var(--space) * 4);
+  --inner-padding-end: calc(var(--space) * 4);
+  --min-height: 48px;
+  --border-color: var(--line);
+  --color: var(--ink);
 }
 
 .page-pad {
-  padding: 16px 16px 48px;
-  max-width: var(--ii-page-max);
+  padding: calc(var(--space) * 5) calc(var(--space) * 5) calc(var(--space) * 12);
+  max-width: var(--page-max);
   margin: 0 auto;
 }
 
+.display {
+  font-size: var(--type-display-size);
+  font-weight: var(--type-display-weight);
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum";
+  letter-spacing: -0.03em;
+  line-height: 1.05;
+  color: var(--ice);
+}
+
+.label {
+  font-size: var(--type-label-size);
+  font-weight: 500;
+  letter-spacing: var(--type-label-tracking);
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+
+.meta {
+  font-size: var(--type-meta-size);
+  color: var(--ink-soft);
+  line-height: 1.4;
+}
+
 .muted {
-  color: var(--ii-ink-soft);
-  font-size: var(--ii-meta);
+  color: var(--ink-soft);
+  font-size: var(--type-meta-size);
   line-height: 1.45;
 }
 
 .todo-note {
-  color: var(--ii-ink-soft);
-  font-size: var(--ii-label);
+  color: var(--ink-soft);
+  font-size: 0.75rem;
   font-style: italic;
-  margin-top: 8px;
-}
-
-.label {
-  margin: 0;
-  font-size: var(--ii-label);
-  font-weight: 500;
-  letter-spacing: var(--ii-tracking-label);
-  text-transform: uppercase;
-  color: var(--ii-ink-soft);
-}
-
-.display {
-  margin: 0;
-  font-size: var(--ii-display);
-  font-weight: 500;
-  font-variant-numeric: tabular-nums;
-  font-feature-settings: "tnum";
-  letter-spacing: var(--ii-tracking-display);
-  line-height: 1.1;
-  color: var(--ii-ice);
+  margin-top: calc(var(--space) * 2);
 }
 
 .kpi-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 8px;
-  margin: 8px 0 24px;
+  gap: calc(var(--space) * 2);
+  margin: calc(var(--space) * 2) 0 calc(var(--space) * 5);
 }
 
 .kpi-card {
   background: transparent;
-  border: 1px solid var(--ii-line);
-  border-radius: var(--ii-radius);
-  padding: 12px 6px 14px;
-  text-align: center;
+  border: 1px solid var(--line);
+  border-radius: 2px;
+  padding: calc(var(--space) * 3) calc(var(--space) * 2) calc(var(--space) * 3);
+  text-align: left;
   box-shadow: none;
 }
 
 .kpi-card .n {
-  font-size: var(--ii-label);
-  letter-spacing: var(--ii-tracking-label);
-  color: var(--ii-ink-soft);
+  font-size: var(--type-label-size);
+  letter-spacing: var(--type-label-tracking);
+  color: var(--ink-soft);
   text-transform: uppercase;
   font-weight: 500;
 }
 
 .kpi-card .value {
-  margin-top: 8px;
+  margin-top: calc(var(--space) * 2);
   font-variant-numeric: tabular-nums;
   font-feature-settings: "tnum";
   font-size: 1.15rem;
-  font-weight: 500;
-  letter-spacing: var(--ii-tracking-display);
-  color: var(--ii-ice);
+  font-weight: 560;
+  letter-spacing: -0.03em;
+  color: var(--ice);
   line-height: 1.15;
 }
 
 .kpi-card .value.empty {
-  color: var(--ii-rest);
-  font-size: 1.05rem;
+  color: var(--rest);
+  font-size: 1rem;
 }
 
 ion-card {
   box-shadow: none;
-  border: 1px solid var(--ii-line);
-  border-radius: var(--ii-radius);
-  margin: 0 0 16px;
-  background: var(--ii-surface);
+  border: 1px solid var(--line);
+  border-radius: 2px;
+  margin: 0 0 calc(var(--space) * 4);
 }
 
 .auth-shell {
   max-width: 420px;
   margin: 0 auto;
-  padding-top: 28px;
+  padding-top: calc(var(--space) * 7);
 }
 
 .n-segment {
-  margin: 8px 0 16px;
+  margin: calc(var(--space) * 2) 0 calc(var(--space) * 4);
 }
 
 .center {
   text-align: center;
-  padding: 32px;
+  padding: calc(var(--space) * 8);
 }
 
 h1 {
-  font-weight: 500;
-  font-size: var(--ii-title);
-  letter-spacing: -0.01em;
-  color: var(--ii-ink);
-  margin: 4px 0 8px;
+  font-weight: var(--type-title-weight);
+  font-size: 1.5rem;
+  margin: calc(var(--space) * 2) 0;
+  color: var(--ink);
 }
 
 h2 {
-  font-size: var(--ii-label);
+  font-size: var(--type-label-size);
   font-weight: 500;
-  letter-spacing: var(--ii-tracking-label);
+  letter-spacing: var(--type-label-tracking);
   text-transform: uppercase;
-  color: var(--ii-ink-soft);
-  margin: 28px 0 12px;
+  color: var(--ink-soft);
+  margin: calc(var(--space) * 7) 0 calc(var(--space) * 3);
 }
 
 ion-refresher {
   pointer-events: none !important;
+}
+
+.lap-chart .analysis {
+  margin-top: 16px;
+  padding-top: 12px;
+  border-top: 1px solid var(--line);
+}
+.lap-chart .analysis-kicker {
+  margin: 0;
+  font-size: var(--type-label-size);
+  letter-spacing: var(--type-label-tracking);
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  font-weight: 500;
+}
+.lap-chart .analysis-title { margin: 4px 0 0; font-weight: 500; }
+.lap-chart .analysis-time {
+  margin: 8px 0 4px;
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum";
+  font-size: var(--type-display-size);
+  font-weight: 560;
+  letter-spacing: -0.03em;
+  color: var(--ice);
+  line-height: 1.05;
+}
+.lap-chart .analysis.fastest .analysis-time { color: var(--ice-deep); }
+.lap-chart .analysis .muted { margin: 2px 0 0; }
+.lap-chart .thresh-box { margin-top: 20px; color: var(--ink-soft); font-size: var(--type-meta-size); }
+.lap-chart .thresh-box summary { cursor: pointer; }
+.lap-chart .thresh { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 12px 0 4px; }
+.lap-chart .thresh ion-input {
+  --background: transparent;
+  --padding-start: 8px;
+  --padding-end: 8px;
+  --highlight-color-focused: var(--ice);
+  border: 1px solid var(--line);
+}
+.lap-chart .thresh-hint { margin: 8px 0 0; }
+
+ion-router-outlet {
+  pointer-events: none;
+}
+
+ion-router-outlet > * {
+  pointer-events: auto;
 }

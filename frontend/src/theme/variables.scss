@@ -1,60 +1,59 @@
+/* IceInsights visual system — paper, ink, ice. Not Ionic purple. */
 :root {
-  /* IceInsights tokens — paper, ink, ice. Not Ionic purple, not washed grey. */
-  --ii-paper: #f3eee6;
-  --ii-paper-rgb: 243, 238, 230;
-  --ii-ink: #121a24;
-  --ii-ink-rgb: 18, 26, 36;
-  --ii-ink-soft: #5a6570;
-  --ii-line: #ddd4c8;
-  --ii-ice: #1e7488;
-  --ii-ice-rgb: 30, 116, 136;
-  --ii-ice-deep: #0e4a58;
-  --ii-rest: #9aadb4;
-  --ii-surface: #faf6f0;
+  --paper: #f4efe6;
+  --ink: #1f1b16;
+  --ink-soft: #6f675e;
+  --line: #ddd4c8;
+  --ice: #2f6f7c;
+  --ice-deep: #163f48;
+  --rest: #c8bfb3;
 
-  --ii-display: 2.125rem;
-  --ii-title: 1.25rem;
-  --ii-body: 0.9375rem;
-  --ii-label: 0.6875rem;
-  --ii-meta: 0.8125rem;
-  --ii-space: 4px;
-  --ii-radius: 12px;
-  --ii-page-max: 720px;
-  --ii-tracking-display: -0.03em;
-  --ii-tracking-label: 0.1em;
+  --space: 4px;
+  --page-max: 720px;
 
-  --ion-color-primary: #1e7488;
-  --ion-color-primary-rgb: 30, 116, 136;
-  --ion-color-primary-contrast: #ffffff;
-  --ion-color-primary-contrast-rgb: 255, 255, 255;
-  --ion-color-primary-shade: #0e4a58;
-  --ion-color-primary-tint: #358496;
+  --font-sans: "Segoe UI", ui-sans-serif, system-ui, -apple-system, "Helvetica Neue", sans-serif;
 
-  --ion-color-secondary: #5a6570;
-  --ion-color-secondary-rgb: 90, 101, 112;
-  --ion-color-secondary-contrast: #ffffff;
-  --ion-color-secondary-contrast-rgb: 255, 255, 255;
-  --ion-color-secondary-shade: #4e5862;
-  --ion-color-secondary-tint: #6b757f;
+  --type-display-size: 2.25rem;
+  --type-display-weight: 560;
+  --type-title-size: 1.05rem;
+  --type-title-weight: 560;
+  --type-body-size: 0.95rem;
+  --type-label-size: 0.68rem;
+  --type-label-tracking: 0.12em;
+  --type-meta-size: 0.8rem;
 
-  --ion-color-tertiary: #9aadb4;
-  --ion-color-success: #3d6b5c;
-  --ion-color-warning: #a8844a;
-  --ion-color-danger: #8f4a4a;
-  --ion-color-medium: #5a6570;
-  --ion-color-light: #f3eee6;
+  --ion-font-family: var(--font-sans);
+  --ion-background-color: var(--paper);
+  --ion-background-color-rgb: 244, 239, 230;
+  --ion-text-color: var(--ink);
+  --ion-text-color-rgb: 31, 27, 22;
+  --ion-border-color: var(--line);
+  --ion-toolbar-background: var(--paper);
+  --ion-toolbar-color: var(--ink);
+  --ion-tab-bar-background: var(--paper);
+  --ion-tab-bar-color: var(--ink-soft);
+  --ion-tab-bar-color-selected: var(--ink);
+  --ion-item-background: transparent;
+  --ion-card-background: transparent;
 
-  --ion-background-color: #f3eee6;
-  --ion-background-color-rgb: 243, 238, 230;
-  --ion-text-color: #121a24;
-  --ion-text-color-rgb: 18, 26, 36;
-  --ion-toolbar-background: #f3eee6;
-  --ion-toolbar-color: #121a24;
-  --ion-tab-bar-background: #f3eee6;
-  --ion-tab-bar-color: #5a6570;
-  --ion-tab-bar-color-selected: #121a24;
-  --ion-item-background: #faf6f0;
-  --ion-card-background: #faf6f0;
-  --ion-border-color: #ddd4c8;
-  --ion-font-family: "Segoe UI", "Helvetica Neue", system-ui, -apple-system, sans-serif;
+  --ion-color-primary: #2f6f7c;
+  --ion-color-primary-rgb: 47, 111, 124;
+  --ion-color-primary-contrast: #f4efe6;
+  --ion-color-primary-contrast-rgb: 244, 239, 230;
+  --ion-color-primary-shade: #163f48;
+  --ion-color-primary-tint: #4a8793;
+
+  --ion-color-secondary: #6f675e;
+  --ion-color-secondary-rgb: 111, 103, 94;
+  --ion-color-secondary-contrast: #f4efe6;
+  --ion-color-secondary-contrast-rgb: 244, 239, 230;
+  --ion-color-secondary-shade: #5f5850;
+  --ion-color-secondary-tint: #7e776f;
+
+  --ion-color-tertiary: #8a8176;
+  --ion-color-success: #4d6b5c;
+  --ion-color-warning: #9a7a3e;
+  --ion-color-danger: #8c4a42;
+  --ion-color-medium: #6f675e;
+  --ion-color-light: #f4efe6;
 }

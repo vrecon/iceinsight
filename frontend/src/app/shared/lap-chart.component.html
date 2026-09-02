@@ -36,14 +36,14 @@
           }
         </div>
         <p class="session-caption">
-          Sessie {{ group.sessionNr }} · {{ group.skateCount }} ronden
+          Sessie {{ group.sessionNr }} · {{ group.skateCount }} actief
         </p>
       </div>
     }
   </div>
 
   <p class="summary muted">
-    {{ skateCount() }} ronden
+    {{ skateCount() }} actief
     @if (restCount()) {
       · {{ restCount() }} rust
     }
@@ -51,7 +51,7 @@
   </p>
 
   @if (selected(); as bar) {
-    <div class="analysis">
+    <div class="analysis" [class.fastest]="bar.fastest">
       <p class="analysis-kicker">
         @if (bar.fastest) {
           Snelste ronde
@@ -74,8 +74,8 @@
     </div>
   }
 
-  <details class="thresh-fold">
-    <summary>Y-as in seconden</summary>
+  <details class="thresh-box">
+    <summary>Y-as (seconden)</summary>
     <div class="thresh">
       <ion-input
         type="number"
@@ -94,6 +94,6 @@
         (ionInput)="onMaxSec($event)"
       ></ion-input>
     </div>
-    <p class="muted thresh-hint">Venster (bijv. 25–102). Ronden daarbuiten knippen naar de rand.</p>
+    <p class="muted thresh-hint">Tijden daarbuiten knippen naar de rand.</p>
   </details>
 </div>

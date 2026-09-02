@@ -16,24 +16,23 @@ import { IonIcon } from '@ionic/angular';
   styles: `
     .empty {
       text-align: center;
-      padding: 48px 20px;
+      padding: calc(var(--space) * 12) calc(var(--space) * 5);
     }
     ion-icon {
-      font-size: 32px;
-      margin-bottom: 12px;
-      color: var(--ii-rest);
+      font-size: 28px;
+      margin-bottom: calc(var(--space) * 3);
+      color: var(--rest);
     }
     .title {
-      margin: 0 0 8px;
-      color: var(--ii-ink);
+      margin: 0 0 calc(var(--space) * 2);
+      color: var(--ink);
       font-weight: 500;
-      font-size: var(--ii-body);
+      font-size: var(--type-title-size);
     }
     .muted {
-      margin: 0 auto;
-      max-width: 28rem;
-      color: var(--ii-ink-soft);
-      font-size: var(--ii-meta);
+      margin: 0;
+      color: var(--ink-soft);
+      font-size: var(--type-meta-size);
       line-height: 1.5;
     }
   `,
