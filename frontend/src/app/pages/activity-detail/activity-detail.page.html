@@ -14,48 +14,46 @@
     } @else if (error()) {
       <ion-note color="danger">{{ error() }}</ion-note>
     } @else if (activity(); as item) {
-      <p class="muted">{{ formatDateTime(item.startTime) }} — {{ formatDateTime(item.endTime) }}</p>
-      <p class="muted">{{ locationLabel(item.locationId) }} · chip #{{ item.chipId ?? '—' }}</p>
+      <header class="rit-head">
+        <h1>{{ item.name || 'Rit' }}</h1>
+        <p class="when">{{ formatDateTime(item.startTime) }}</p>
+        <p class="loc">{{ locationLabel(item.locationId) }} · chip #{{ item.chipId ?? '—' }}</p>
+      </header>
+
+      <section class="hero">
+        <p class="label">Snelste ronde</p>
+        <p class="display">{{ displayDuration(kpis().fastestDuration || item.best1Duration) }}</p>
+      </section>
 
       @if (!lapsLoading() && !lapsError() && laps().length) {
-        <h2>Overzicht</h2>
-        <div class="kpi-grid rit-kpis">
-          <div class="kpi-card">
-            <div class="n">Snelste ronde</div>
-            <div class="value" [class.empty]="!kpis().fastestDuration">{{ displayDuration(kpis().fastestDuration) }}</div>
-          </div>
-          <div class="kpi-card">
-            <div class="n">Max snelheid</div>
+        <div class="kpi-strip">
+          <div class="kpi-cell">
+            <div class="n">Max</div>
             <div class="value" [class.empty]="kpis().maxSpeedKph == null">{{ formatSpeedKph(kpis().maxSpeedKph) }}</div>
           </div>
-          <div class="kpi-card">
-            <div class="n">Gem. snelheid</div>
+          <div class="kpi-cell">
+            <div class="n">Gem.</div>
             <div class="value" [class.empty]="kpis().avgSpeedKph == null">{{ formatSpeedKph(kpis().avgSpeedKph) }}</div>
           </div>
-          <div class="kpi-card">
+          <div class="kpi-cell">
             <div class="n">Ronden</div>
             <div class="value">{{ kpis().activeCount }}</div>
-            @if (kpis().restCount) {
-              <div class="hint">{{ kpis().restCount }} rust</div>
-            }
           </div>
-          <div class="kpi-card">
+          <div class="kpi-cell">
             <div class="n">Afstand</div>
             <div class="value">{{ formatDistanceKm(kpis().distanceKm) }}</div>
-            <div class="hint">400m-baan</div>
-          </div>
-          <div class="kpi-card">
-            <div class="n">Actief</div>
-            <div class="value" [class.empty]="kpis().activeMillis == null">{{ formatActiveDuration(kpis().activeMillis) }}</div>
-          </div>
-          <div class="kpi-card span-2">
-            <div class="n">Start–finish</div>
-            <div class="value start-finish">{{ formatStartFinish(kpis().start, kpis().finish) }}</div>
           </div>
         </div>
+        <p class="strip-meta">
+          Actief {{ formatActiveDuration(kpis().activeMillis) }}
+          @if (kpis().restCount) {
+            · {{ kpis().restCount }} rust
+          }
+          · {{ formatStartFinish(kpis().start, kpis().finish) }}
+        </p>
       }
 
-      <h2>Opeenvolgende beste tijden</h2>
+      <p class="label best-label">Opeenvolgende besten</p>
       <app-kpi-grid [model]="item"></app-kpi-grid>
 
       <h2>Ronden</h2>

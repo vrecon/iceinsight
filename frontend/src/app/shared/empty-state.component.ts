@@ -19,19 +19,21 @@ import { IonIcon } from '@ionic/angular';
       padding: 48px 20px;
     }
     ion-icon {
-      font-size: 40px;
+      font-size: 32px;
       margin-bottom: 12px;
-      color: var(--ion-color-medium);
+      color: var(--ii-rest);
     }
     .title {
       margin: 0 0 8px;
-      color: var(--ion-text-color);
+      color: var(--ii-ink);
       font-weight: 500;
+      font-size: var(--ii-body);
     }
     .muted {
-      margin: 0;
-      color: var(--ion-color-medium);
-      font-size: 0.9rem;
+      margin: 0 auto;
+      max-width: 28rem;
+      color: var(--ii-ink-soft);
+      font-size: var(--ii-meta);
       line-height: 1.5;
     }
   `,

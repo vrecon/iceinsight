@@ -3,25 +3,23 @@
   padding: 24px;
 }
 
-ion-item h2 {
-  font-weight: 560;
-}
-
 .rit-list {
-  background: #fff;
-  border: 1px solid var(--ion-border-color);
-  border-radius: 12px;
-  overflow: hidden;
+  display: flex;
+  flex-direction: column;
 }
 
 .rit-row {
   display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 14px 16px;
+  align-items: baseline;
+  gap: 16px;
+  padding: 16px 0;
   color: inherit;
   text-decoration: none;
-  border-bottom: 1px solid var(--ion-border-color);
+  border-bottom: 1px solid var(--ii-line);
+  position: relative;
+  z-index: 2;
+  pointer-events: auto;
+  cursor: pointer;
 }
 
 .rit-row:last-child {
@@ -31,29 +29,37 @@ ion-item h2 {
 .rit-row-body {
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: 4px;
   min-width: 0;
   flex: 1;
 }
 
 .rit-row .name {
-  font-weight: 560;
+  font-size: var(--ii-body);
+  font-weight: 500;
+  color: var(--ii-ink);
 }
 
 .rit-row .meta {
-  color: var(--ion-color-medium);
-  font-size: 0.9rem;
+  color: var(--ii-ink-soft);
+  font-size: var(--ii-meta);
+  font-variant-numeric: tabular-nums;
 }
 
-.rit-row .chev {
-  color: var(--ion-color-medium);
-  font-size: 1.4rem;
-  line-height: 1;
+.rit-row .loc {
+  color: var(--ii-rest);
+  font-size: var(--ii-label);
+  letter-spacing: var(--ii-tracking-label);
+  text-transform: uppercase;
 }
 
-.rit-row {
-  position: relative;
-  z-index: 2;
-  pointer-events: auto;
-  cursor: pointer;
+.rit-time {
+  flex-shrink: 0;
+  font-size: 1.5rem;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum";
+  letter-spacing: var(--ii-tracking-display);
+  color: var(--ii-ice);
+  line-height: 1.1;
 }
