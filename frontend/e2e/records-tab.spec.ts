@@ -61,11 +61,5 @@ test('Records tab opens /tabs/records with Seizoensbesten', async ({ page }) => 
   await page.goto('/tabs/ritten');
   await page.getByRole('tab', { name: 'Records' }).click();
   await expect(page).toHaveURL(/\/tabs\/records$/);
-  await expect(
-    page
-      .getByRole('heading', { name: 'Seizoensbesten' })
-      .or(page.getByText('Seizoensbesten'))
-      .or(page.getByRole('heading', { name: 'Records' }))
-      .or(page.locator('ion-title').filter({ hasText: 'Records' })),
-  ).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Seizoensbesten' })).toBeVisible();
 });
