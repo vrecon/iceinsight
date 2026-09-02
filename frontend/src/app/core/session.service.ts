@@ -5,6 +5,7 @@ import { AuthResponse } from '../api/models/auth-response';
 import { LoginRequest } from '../api/models/login-request';
 import { RegisterRequest } from '../api/models/register-request';
 import { User } from '../api/models/user';
+import { isAccessTokenUsable } from './access-token';
 
 const TOKEN_KEY = 'iceinsights.accessToken';
 const REFRESH_KEY = 'iceinsights.refreshToken';
@@ -21,7 +22,7 @@ export class SessionService {
   readonly accessToken = this.token.asReadonly();
   readonly refreshToken = this.refresh.asReadonly();
   readonly user = this.currentUser.asReadonly();
-  readonly isAuthenticated = computed(() => !!this.token());
+  readonly isAuthenticated = computed(() => isAccessTokenUsable(this.token()));
 
   applyAuth(response: AuthResponse): void {
     this.token.set(response.token ?? null);
