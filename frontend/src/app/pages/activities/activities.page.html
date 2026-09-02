@@ -15,7 +15,7 @@
     } @else if (!activities().length) {
       <app-empty-state
         title="Nog geen ritten"
-        hint="Ritten verschijnen hier zodra je data is gesynchroniseerd."
+        hint="Importeer je ritten en synchroniseer om ze hier te zien."
         icon="speedometer-outline"
       ></app-empty-state>
     } @else {
@@ -25,11 +25,20 @@
             <a class="rit-row" [attr.href]="'/ritten/' + id">
               <span class="rit-row-body">
                 <span class="name">{{ activity.name || ('Rit #' + id) }}</span>
+                <span class="meta" aria-hidden="true">{{ formatDateTime(activity.startTime) }}</span>
+                <span class="loc" aria-hidden="true">{{ locationLabel(activity.locationId) }}</span>
+              </span>
+              <span class="best" aria-hidden="true">{{ displayDuration(activity.best1Duration) }}</span>
+            </a>
+          } @else {
+            <div class="rit-row rit-row--static">
+              <span class="rit-row-body">
+                <span class="name">{{ activity.name || 'Rit' }}</span>
                 <span class="meta">{{ formatDateTime(activity.startTime) }}</span>
                 <span class="loc">{{ locationLabel(activity.locationId) }}</span>
               </span>
-              <span class="rit-time">{{ displayDuration(activity.best1Duration) }}</span>
-            </a>
+              <span class="best">{{ displayDuration(activity.best1Duration) }}</span>
+            </div>
           }
         }
       </nav>
