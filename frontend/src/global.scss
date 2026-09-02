@@ -275,3 +275,12 @@ ion-router-outlet > * {
     background: var(--paper);
   }
 }
+
+ion-toolbar img.toolbar-mark {
+  width: 32px;
+  height: 32px;
+  object-fit: contain;
+  margin-inline: 10px 4px;
+  flex-shrink: 0;
+  display: block;
+}
