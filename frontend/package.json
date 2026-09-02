@@ -10,7 +10,8 @@
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "lint": "ng lint",
-    "generate:api": "ng-openapi-gen"
+    "generate:api": "ng-openapi-gen",
+    "e2e": "playwright test"
   },
   "private": true,
   "dependencies": {
@@ -38,13 +39,14 @@
     "@angular/language-service": "22.0.1",
     "@capacitor/cli": "8.5.0",
     "@ionic/angular-toolkit": "^13.0.0",
+    "@playwright/test": "^1.62.1",
     "angular-eslint": "22.0.0",
     "eslint": "^9.16.0",
     "jsdom": "^26.0.0",
+    "ng-openapi-gen": "^1.0.5",
     "typescript": "~6.0.0",
     "typescript-eslint": "^8.61.0",
-    "vitest": "^4.0.8",
-    "ng-openapi-gen": "^1.0.5"
+    "vitest": "^4.0.8"
   },
   "description": "IceInsights Ionic Angular frontend"
 }
