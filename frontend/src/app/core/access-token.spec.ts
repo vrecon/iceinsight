@@ -1,4 +1,3 @@
-import { afterEach, describe, expect, it, vi } from 'vitest';
 import { accessTokenExpSeconds, isAccessTokenUsable } from './access-token';
 
 function jwtWithExp(exp: number): string {
@@ -7,10 +6,6 @@ function jwtWithExp(exp: number): string {
 }
 
 describe('access token', () => {
-  afterEach(() => {
-    vi.useRealTimers();
-  });
-
   it('treats missing token as unusable', () => {
     expect(isAccessTokenUsable(null)).toBe(false);
     expect(isAccessTokenUsable('')).toBe(false);
@@ -22,14 +17,12 @@ describe('access token', () => {
   });
 
   it('rejects JWT whose exp is in the past', () => {
-    vi.useFakeTimers();
-    vi.setSystemTime(new Date('2026-09-02T10:00:00Z'));
-    expect(isAccessTokenUsable(jwtWithExp(Math.floor(Date.parse('2026-09-02T09:00:00Z') / 1000)))).toBe(false);
+    const exp = Math.floor(Date.now() / 1000) - 60;
+    expect(isAccessTokenUsable(jwtWithExp(exp))).toBe(false);
   });
 
   it('accepts JWT whose exp is in the future', () => {
-    vi.useFakeTimers();
-    vi.setSystemTime(new Date('2026-09-02T10:00:00Z'));
-    expect(isAccessTokenUsable(jwtWithExp(Math.floor(Date.parse('2026-09-02T11:00:00Z') / 1000)))).toBe(true);
+    const exp = Math.floor(Date.now() / 1000) + 3600;
+    expect(isAccessTokenUsable(jwtWithExp(exp))).toBe(true);
   });
 });
