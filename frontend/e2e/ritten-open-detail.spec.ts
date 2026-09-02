@@ -35,6 +35,10 @@ async function mockApis(page: Page): Promise<void> {
     });
   });
 
+  await page.route('**/api/activity/sync', async (route) => {
+    await route.fulfill({ status: 202, body: '' });
+  });
+
   await page.route('**/api/v1/activities/42/laps', async (route) => {
     if (route.request().method() !== 'GET') {
       await route.fallback();
