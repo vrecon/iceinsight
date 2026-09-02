@@ -2,6 +2,15 @@
   <ion-toolbar>
     <img class="toolbar-mark" slot="start" src="assets/icon/ijsvogel.png" width="32" height="32" alt="IceInsights" />
     <ion-title>Ritten</ion-title>
+    <ion-buttons slot="end">
+      <ion-button fill="clear" (click)="syncAndReload()" [disabled]="syncing()">
+        @if (syncing()) {
+          <ion-spinner name="crescent"></ion-spinner>
+        } @else {
+          Sync
+        }
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
