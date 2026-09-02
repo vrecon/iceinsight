@@ -1,10 +1,10 @@
-<ion-header>
+<ion-header [translucent]="true">
   <ion-toolbar>
     <ion-title>Ritten</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
+<ion-content [fullscreen]="true">
   <div class="page-pad">
     @if (error()) {
       <ion-note color="danger">{{ error() }}</ion-note>

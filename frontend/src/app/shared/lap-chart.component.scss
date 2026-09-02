@@ -5,7 +5,7 @@
 .swatch.rest { background: var(--rest); }
 .swatch.avg { height: 2px; width: 12px; background: var(--ink-soft); vertical-align: 3px; }
 .chart-scroll { display: flex; gap: 16px; overflow-x: auto; }
-.session { flex: 1 1 auto; min-width: min(100%, 140px); }
+.session { flex: 1 1 auto; min-width: min(100%, 140px); padding: 8px 4px 4px; background: var(--surface-glass); border: 1px solid var(--line); border-radius: 2px; }
 .bars { display: flex; height: 168px; gap: 2px; }
 .bar-col {
   display: flex; flex-direction: column; align-items: center; justify-content: flex-end;

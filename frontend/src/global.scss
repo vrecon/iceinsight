@@ -22,13 +22,16 @@ ion-content {
 }
 
 ion-header ion-toolbar {
-  --background: var(--paper);
+  --background: var(--chrome-glass);
   --color: var(--ink);
   --border-width: 0 0 1px 0;
   --border-color: var(--line);
   --min-height: 44px;
   --padding-top: 0;
   --padding-bottom: 0;
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+  box-shadow: inset 0 1px 0 var(--highlight-ice);
 }
 
 ion-title {
@@ -45,11 +48,14 @@ ion-back-button {
 }
 
 ion-tab-bar {
-  --background: var(--paper);
+  --background: var(--chrome-glass);
   --color: var(--ink-soft);
   --color-selected: var(--ink);
   --border: 1px solid var(--line);
   height: 48px;
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+  box-shadow: inset 0 1px 0 var(--highlight-ice);
 }
 
 ion-tab-button {
@@ -122,12 +128,14 @@ ion-item {
 }
 
 .kpi-card {
-  background: transparent;
+  background: var(--surface-glass);
   border: 1px solid var(--line);
   border-radius: 2px;
   padding: calc(var(--space) * 3) calc(var(--space) * 2) calc(var(--space) * 3);
   text-align: left;
-  box-shadow: none;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.42);
+  -webkit-backdrop-filter: blur(12px) saturate(1.35);
+  backdrop-filter: blur(12px) saturate(1.35);
 }
 
 .kpi-card .n {
@@ -198,8 +206,13 @@ ion-refresher {
 
 .lap-chart .analysis {
   margin-top: 16px;
-  padding-top: 12px;
-  border-top: 1px solid var(--line);
+  padding: calc(var(--space) * 4);
+  border: 1px solid var(--line);
+  border-radius: 2px;
+  background: var(--surface-glass);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.42);
+  -webkit-backdrop-filter: blur(14px) saturate(1.4);
+  backdrop-filter: blur(14px) saturate(1.4);
 }
 .lap-chart .analysis-kicker {
   margin: 0;
@@ -240,4 +253,25 @@ ion-router-outlet {
 
 ion-router-outlet > * {
   pointer-events: auto;
+}
+
+@media (prefers-reduced-transparency: reduce), (prefers-reduced-motion: reduce) {
+  ion-header ion-toolbar,
+  ion-tab-bar,
+  .kpi-card,
+  .lap-chart .analysis {
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+    box-shadow: none;
+  }
+
+  ion-header ion-toolbar,
+  ion-tab-bar {
+    --background: var(--paper);
+  }
+
+  .kpi-card,
+  .lap-chart .analysis {
+    background: var(--paper);
+  }
 }
