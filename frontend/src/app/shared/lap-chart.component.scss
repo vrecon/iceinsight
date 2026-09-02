@@ -6,39 +6,40 @@
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 10px 14px;
-  margin: 0 0 10px;
-  font-size: 0.78rem;
+  gap: 8px 16px;
+  margin: 0 0 12px;
+  font-size: var(--ii-label);
+  letter-spacing: 0.02em;
 }
 
 .swatch {
   display: inline-block;
-  width: 10px;
-  height: 10px;
-  border-radius: 2px;
+  width: 8px;
+  height: 8px;
+  border-radius: 1px;
   margin-right: 4px;
   vertical-align: -1px;
 }
 
 .swatch.skate {
-  background: var(--ion-color-primary);
+  background: var(--ii-ice);
 }
 
 .swatch.rest {
-  background: #c5d3dc;
+  background: var(--ii-rest);
 }
 
 .swatch.avg {
   height: 2px;
-  width: 14px;
+  width: 12px;
   border-radius: 1px;
-  background: var(--ion-color-secondary-shade);
+  background: var(--ii-ink-soft);
   vertical-align: 3px;
 }
 
 .chart-scroll {
   display: flex;
-  gap: 14px;
+  gap: 16px;
   overflow-x: auto;
   padding: 4px 0 2px;
   -webkit-overflow-scrolling: touch;
@@ -69,7 +70,7 @@
   border: 0;
   background: transparent;
   cursor: pointer;
-  color: var(--ion-color-medium);
+  color: var(--ii-rest);
 }
 
 .track {
@@ -84,24 +85,24 @@
   left: 18%;
   right: 18%;
   bottom: 0;
-  border-radius: 3px 3px 1px 1px;
-  background: var(--ion-color-primary);
-  opacity: 0.88;
+  border-radius: 2px 2px 1px 1px;
+  background: var(--ii-ice);
+  opacity: 0.82;
 }
 
 .bar-col.fastest .fill {
-  background: var(--ion-color-primary-shade);
+  background: var(--ii-ice-deep);
   opacity: 1;
 }
 
 .bar-col.rest .fill {
-  background: #c5d3dc;
-  opacity: 0.55;
+  background: var(--ii-rest);
+  opacity: 0.4;
   border-radius: 1px;
 }
 
 .bar-col.selected .fill {
-  outline: 1px solid var(--ion-color-primary-shade);
+  outline: 1px solid var(--ii-ice-deep);
   outline-offset: 1px;
   opacity: 1;
 }
@@ -110,8 +111,8 @@
   position: absolute;
   left: 4%;
   right: 4%;
-  height: 2px;
-  background: var(--ion-color-secondary-shade);
+  height: 1px;
+  background: var(--ii-ink-soft);
   border-radius: 1px;
   pointer-events: none;
   z-index: 1;
@@ -127,8 +128,9 @@
 
 .session-caption {
   margin: 8px 0 0;
-  font-size: 0.75rem;
-  color: var(--ion-color-medium);
+  font-size: var(--ii-label);
+  letter-spacing: 0.02em;
+  color: var(--ii-ink-soft);
 }
 
 .summary {
@@ -137,57 +139,76 @@
 
 .analysis {
   margin-top: 16px;
-  padding: 14px 16px 16px;
-  background: #fff;
-  border: 1px solid var(--ion-border-color);
-  border-radius: 14px;
+  padding: 12px 0 4px;
+  border-top: 1px solid var(--ii-line);
 }
 
 .analysis-kicker {
   margin: 0;
-  font-size: 0.72rem;
-  letter-spacing: 0.08em;
+  font-size: var(--ii-label);
+  letter-spacing: var(--ii-tracking-label);
   text-transform: uppercase;
-  color: var(--ion-color-medium);
+  color: var(--ii-ink-soft);
   font-weight: 500;
 }
 
 .analysis-title {
   margin: 6px 0 0;
   font-weight: 500;
+  font-size: var(--ii-body);
+  color: var(--ii-ink);
 }
 
 .analysis-time {
   margin: 8px 0 4px;
   font-variant-numeric: tabular-nums;
-  font-size: 1.45rem;
+  font-feature-settings: "tnum";
+  font-size: var(--ii-display);
   font-weight: 500;
-  letter-spacing: -0.02em;
-  color: var(--ion-color-primary);
-  line-height: 1.15;
+  letter-spacing: var(--ii-tracking-display);
+  color: var(--ii-ice);
+  line-height: 1.1;
 }
 
 .analysis .muted {
   margin: 2px 0 0;
 }
 
+.thresh-fold {
+  margin-top: 20px;
+  color: var(--ii-ink-soft);
+}
+
+.thresh-fold summary {
+  cursor: pointer;
+  font-size: var(--ii-label);
+  letter-spacing: var(--ii-tracking-label);
+  text-transform: uppercase;
+  list-style: none;
+}
+
+.thresh-fold summary::-webkit-details-marker {
+  display: none;
+}
+
 .thresh {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 12px;
-  margin: 0 0 4px;
+  margin: 12px 0 4px;
 }
 
 .thresh ion-input {
-  --background: #fff;
+  --background: var(--ii-surface);
   --padding-start: 12px;
   --padding-end: 12px;
-  --highlight-color-focused: var(--ion-color-primary);
-  border: 1px solid var(--ion-border-color);
-  border-radius: 12px;
+  --highlight-color-focused: var(--ii-ice);
+  --color: var(--ii-ink);
+  border: 1px solid var(--ii-line);
+  border-radius: var(--ii-radius);
 }
 
 .thresh-hint {
-  margin: 6px 0 12px;
-  font-size: 0.78rem;
+  margin: 6px 0 0;
+  font-size: var(--ii-label);
 }

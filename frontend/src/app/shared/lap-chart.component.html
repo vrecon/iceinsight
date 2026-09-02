@@ -1,24 +1,4 @@
 <div class="lap-chart">
-  <div class="thresh">
-    <ion-input
-      type="number"
-      inputmode="decimal"
-      label="Min. seconde"
-      labelPlacement="stacked"
-      [value]="minSecValue()"
-      (ionInput)="onMinSec($event)"
-    ></ion-input>
-    <ion-input
-      type="number"
-      inputmode="decimal"
-      label="Max. seconde"
-      labelPlacement="stacked"
-      [value]="maxSecValue()"
-      (ionInput)="onMaxSec($event)"
-    ></ion-input>
-  </div>
-  <p class="muted thresh-hint">Y-asvenster in seconden (bijv. 25–102). Ronden daarbuiten knippen naar de rand.</p>
-
   <div class="legend muted">
     <span class="swatch skate"></span> ronde
     <span class="swatch rest"></span> rust
@@ -93,4 +73,27 @@
       }
     </div>
   }
+
+  <details class="thresh-fold">
+    <summary>Y-as in seconden</summary>
+    <div class="thresh">
+      <ion-input
+        type="number"
+        inputmode="decimal"
+        label="Min. seconde"
+        labelPlacement="stacked"
+        [value]="minSecValue()"
+        (ionInput)="onMinSec($event)"
+      ></ion-input>
+      <ion-input
+        type="number"
+        inputmode="decimal"
+        label="Max. seconde"
+        labelPlacement="stacked"
+        [value]="maxSecValue()"
+        (ionInput)="onMaxSec($event)"
+      ></ion-input>
+    </div>
+    <p class="muted thresh-hint">Venster (bijv. 25–102). Ronden daarbuiten knippen naar de rand.</p>
+  </details>
 </div>

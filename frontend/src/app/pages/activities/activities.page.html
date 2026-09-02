@@ -15,7 +15,7 @@
     } @else if (!activities().length) {
       <app-empty-state
         title="Nog geen ritten"
-        hint="Lijsten blijven leeg tot import en GET /api/activity/sync hebben gedraaid."
+        hint="Ritten verschijnen hier zodra je data is gesynchroniseerd."
         icon="speedometer-outline"
       ></app-empty-state>
     } @else {
@@ -26,12 +26,9 @@
               <span class="rit-row-body">
                 <span class="name">{{ activity.name || ('Rit #' + id) }}</span>
                 <span class="meta">{{ formatDateTime(activity.startTime) }}</span>
-                <span class="muted">
-                  Beste 1: {{ displayDuration(activity.best1Duration) }}
-                  · {{ locationLabel(activity.locationId) }}
-                </span>
+                <span class="loc">{{ locationLabel(activity.locationId) }}</span>
               </span>
-              <span class="chev" aria-hidden="true">›</span>
+              <span class="rit-time">{{ displayDuration(activity.best1Duration) }}</span>
             </a>
           }
         }

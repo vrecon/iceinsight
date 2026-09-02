@@ -10,93 +10,140 @@
 @import "@ionic/angular/css/flex-utils.css";
 
 ion-content {
-  --background: var(--ion-background-color);
+  --background: var(--ii-paper);
+}
+
+ion-header {
+  box-shadow: none;
 }
 
 ion-toolbar {
-  --border-width: 0 0 1px 0;
-  --border-color: var(--ion-border-color);
-  --min-height: 56px;
+  --background: var(--ii-paper);
+  --color: var(--ii-ink);
+  --border-width: 0;
+  --min-height: 48px;
+  --padding-start: 12px;
+  --padding-end: 12px;
 }
 
 ion-title {
+  font-size: var(--ii-body);
   font-weight: 500;
-  letter-spacing: 0.01em;
+  letter-spacing: 0.02em;
 }
 
 ion-tab-bar {
-  --border: 1px solid var(--ion-border-color);
+  --background: var(--ii-paper);
+  --border: 1px solid var(--ii-line);
+  --color: var(--ii-ink-soft);
+  --color-selected: var(--ii-ink);
+}
+
+ion-tab-button {
+  --color: var(--ii-ink-soft);
+  --color-selected: var(--ii-ink);
+  font-size: var(--ii-label);
+  letter-spacing: var(--ii-tracking-label);
+  text-transform: uppercase;
+}
+
+ion-tab-button ion-icon {
+  font-size: 20px;
 }
 
 ion-item {
   --padding-start: 16px;
   --inner-padding-end: 16px;
-  --min-height: 56px;
+  --min-height: 52px;
+  --border-color: var(--ii-line);
+  --background: var(--ii-surface);
 }
 
 .page-pad {
-  padding: 24px 20px 48px;
-  max-width: 720px;
+  padding: 16px 16px 48px;
+  max-width: var(--ii-page-max);
   margin: 0 auto;
 }
 
 .muted {
-  color: var(--ion-color-medium);
-  font-size: 0.88rem;
+  color: var(--ii-ink-soft);
+  font-size: var(--ii-meta);
   line-height: 1.45;
 }
 
 .todo-note {
-  color: var(--ion-color-medium);
-  font-size: 0.78rem;
+  color: var(--ii-ink-soft);
+  font-size: var(--ii-label);
   font-style: italic;
   margin-top: 8px;
+}
+
+.label {
+  margin: 0;
+  font-size: var(--ii-label);
+  font-weight: 500;
+  letter-spacing: var(--ii-tracking-label);
+  text-transform: uppercase;
+  color: var(--ii-ink-soft);
+}
+
+.display {
+  margin: 0;
+  font-size: var(--ii-display);
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum";
+  letter-spacing: var(--ii-tracking-display);
+  line-height: 1.1;
+  color: var(--ii-ice);
 }
 
 .kpi-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 12px;
-  margin: 8px 0 28px;
+  gap: 8px;
+  margin: 8px 0 24px;
 }
 
 .kpi-card {
-  background: #fff;
-  border: 1px solid var(--ion-border-color);
-  border-radius: 14px;
-  padding: 16px 8px 18px;
+  background: transparent;
+  border: 1px solid var(--ii-line);
+  border-radius: var(--ii-radius);
+  padding: 12px 6px 14px;
   text-align: center;
+  box-shadow: none;
 }
 
 .kpi-card .n {
-  font-size: 0.72rem;
-  letter-spacing: 0.08em;
-  color: var(--ion-color-medium);
+  font-size: var(--ii-label);
+  letter-spacing: var(--ii-tracking-label);
+  color: var(--ii-ink-soft);
   text-transform: uppercase;
   font-weight: 500;
 }
 
 .kpi-card .value {
-  margin-top: 10px;
+  margin-top: 8px;
   font-variant-numeric: tabular-nums;
   font-feature-settings: "tnum";
-  font-size: 1.45rem;
+  font-size: 1.15rem;
   font-weight: 500;
-  letter-spacing: -0.02em;
-  color: var(--ion-color-primary);
+  letter-spacing: var(--ii-tracking-display);
+  color: var(--ii-ice);
   line-height: 1.15;
 }
 
 .kpi-card .value.empty {
-  color: var(--ion-color-medium);
-  font-size: 1.2rem;
+  color: var(--ii-rest);
+  font-size: 1.05rem;
 }
 
 ion-card {
   box-shadow: none;
-  border: 1px solid var(--ion-border-color);
-  border-radius: 14px;
+  border: 1px solid var(--ii-line);
+  border-radius: var(--ii-radius);
   margin: 0 0 16px;
+  background: var(--ii-surface);
 }
 
 .auth-shell {
@@ -115,17 +162,19 @@ ion-card {
 }
 
 h1 {
-  font-weight: 540;
-  font-size: 1.7rem;
-  margin: 8px 0 8px;
+  font-weight: 500;
+  font-size: var(--ii-title);
+  letter-spacing: -0.01em;
+  color: var(--ii-ink);
+  margin: 4px 0 8px;
 }
 
 h2 {
-  font-size: 0.82rem;
-  font-weight: 600;
-  letter-spacing: 0.06em;
+  font-size: var(--ii-label);
+  font-weight: 500;
+  letter-spacing: var(--ii-tracking-label);
   text-transform: uppercase;
-  color: var(--ion-color-medium);
+  color: var(--ii-ink-soft);
   margin: 28px 0 12px;
 }
 
