@@ -1,0 +1,61 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button menu="main-menu" autoHide="false"></ion-menu-button>
+    </ion-buttons>
+    <img class="toolbar-mark brand-mark" slot="start" src="assets/icon/ijsvogel.png" width="32" height="32" alt="IceInsights" />
+    <ion-title>Records</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <div class="page-pad">
+    @if (error()) {
+      <ion-note color="danger">{{ error() }}</ion-note>
+    }
+
+    @if (loading()) {
+      <div class="center"><ion-spinner name="crescent"></ion-spinner></div>
+    } @else if (!season()) {
+      <app-empty-state
+        title="Nog geen seizoen"
+        hint="Records komen uit je seizoensbesten. Data verschijnt na import en sync."
+        icon="trophy-outline"
+      ></app-empty-state>
+    } @else if (season(); as item) {
+      <p class="muted">{{ item.label || 'Huidig seizoen' }} · {{ formatDate(item.startDate) }} – {{ formatDate(item.endDate) }}</p>
+
+      <h2>Seizoensbesten</h2>
+      <app-kpi-grid [model]="item"></app-kpi-grid>
+
+      <h2>Top ritten</h2>
+      <p class="muted">Beste 13 opeenvolgende ronden, max. 15 ritten.</p>
+      @if (!top().length) {
+        <app-empty-state title="Geen top ritten" hint="Nog geen data voor beste 13." icon="time-outline"></app-empty-state>
+      } @else {
+        <nav class="rit-list">
+          @for (entry of top(); track $index; let i = $index) {
+            @if (entry.activityId; as activityId) {
+              <a class="rit-row" [attr.href]="'/ritten/' + activityId">
+                <span class="rit-row-body">
+                  <span class="name">#{{ i + 1 }} · {{ displayDuration(entry.duration) }}</span>
+                  <span class="meta">{{ formatDateTime(entry.startTime) }}</span>
+                  <span class="loc">{{ locationLabel(entry.locationId) }}</span>
+                </span>
+                <span class="best" aria-hidden="true">{{ displayDuration(entry.duration) }}</span>
+              </a>
+            } @else {
+              <div class="rit-row rit-row--static">
+                <span class="rit-row-body">
+                  <span class="name">#{{ i + 1 }} · {{ displayDuration(entry.duration) }}</span>
+                  <span class="meta">{{ formatDateTime(entry.startTime) }}</span>
+                </span>
+                <span class="best">{{ displayDuration(entry.duration) }}</span>
+              </div>
+            }
+          }
+        </nav>
+      }
+    }
+  </div>
+</ion-content>

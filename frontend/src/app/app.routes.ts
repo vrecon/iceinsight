@@ -22,15 +22,28 @@ export const routes: Routes = [
         loadComponent: () => import('./pages/activities/activities.page').then((m) => m.ActivitiesPage),
       },
       {
-        path: 'seizoenen',
-        loadComponent: () => import('./pages/seasons/seasons.page').then((m) => m.SeasonsPage),
+        path: 'records',
+        loadComponent: () => import('./pages/records/records.page').then((m) => m.RecordsPage),
       },
-      {
-        path: 'chips',
-        loadComponent: () => import('./pages/chips/chips.page').then((m) => m.ChipsPage),
-      },
+      { path: 'seizoenen', redirectTo: '/seizoenen', pathMatch: 'full' },
+      { path: 'chips', redirectTo: '/chips', pathMatch: 'full' },
       { path: '', redirectTo: 'ritten', pathMatch: 'full' },
     ],
+  },
+  {
+    path: 'seizoenen',
+    canActivate: [authGuard],
+    loadComponent: () => import('./pages/seasons/seasons.page').then((m) => m.SeasonsPage),
+  },
+  {
+    path: 'chips',
+    canActivate: [authGuard],
+    loadComponent: () => import('./pages/chips/chips.page').then((m) => m.ChipsPage),
+  },
+  {
+    path: 'account',
+    canActivate: [authGuard],
+    loadComponent: () => import('./pages/account/account.page').then((m) => m.AccountPage),
   },
   {
     path: 'ritten/:id',

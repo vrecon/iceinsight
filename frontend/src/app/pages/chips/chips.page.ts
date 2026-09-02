@@ -1,6 +1,5 @@
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
 import {
   IonButton,
   IonButtons,
@@ -13,6 +12,7 @@ import {
   IonItemSliding,
   IonLabel,
   IonList,
+  IonMenuButton,
   IonNote,
   IonRefresher,
   IonRefresherContent,
@@ -24,7 +24,6 @@ import { ChipDto } from '../../api/models/chip-dto';
 import { ChipsService } from '../../api/services/chips.service';
 import { apiErrorMessage } from '../../core/api-error';
 import { formatDateTime } from '../../core/best-n';
-import { SessionService } from '../../core/session.service';
 import { EmptyStateComponent } from '../../shared/empty-state.component';
 
 @Component({
@@ -38,6 +37,7 @@ import { EmptyStateComponent } from '../../shared/empty-state.component';
     IonToolbar,
     IonTitle,
     IonButtons,
+    IonMenuButton,
     IonButton,
     IonContent,
     IonRefresher,
@@ -56,15 +56,12 @@ import { EmptyStateComponent } from '../../shared/empty-state.component';
 })
 export class ChipsPage {
   private readonly chipsApi = inject(ChipsService);
-  private readonly session = inject(SessionService);
-  private readonly router = inject(Router);
   private readonly fb = inject(FormBuilder);
 
   readonly chips = signal<ChipDto[]>([]);
   readonly loading = signal(true);
   readonly error = signal<string | null>(null);
   readonly linking = signal(false);
-  readonly userName = this.session.displayName();
 
   readonly form = this.fb.nonNullable.group({
     chipCode: ['', Validators.required],
@@ -118,13 +115,6 @@ export class ChipsPage {
     this.chipsApi.unlinkChipFromCurrentUser({ chipCode: chip.chipCode }).subscribe({
       next: () => this.reload(),
       error: (err) => this.error.set(apiErrorMessage(err)),
-    });
-  }
-
-  logout(): void {
-    this.session.logout().subscribe({
-      next: () => void this.router.navigate(['/login']),
-      error: () => void this.router.navigate(['/login']),
     });
   }
 

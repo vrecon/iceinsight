@@ -1,0 +1,17 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button menu="main-menu" autoHide="false"></ion-menu-button>
+    </ion-buttons>
+    <img class="toolbar-mark brand-mark" slot="start" src="assets/icon/ijsvogel.png" width="32" height="32" alt="IceInsights" />
+    <ion-title>Account</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <div class="page-pad">
+    <p class="label">Naam</p>
+    <p class="name">{{ displayName }}</p>
+    <ion-button fill="clear" (click)="logout()">Uitloggen</ion-button>
+  </div>
+</ion-content>

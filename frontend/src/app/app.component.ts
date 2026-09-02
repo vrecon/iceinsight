@@ -1,13 +1,43 @@
-import { afterNextRender, ChangeDetectionStrategy, Component } from '@angular/core';
-import { IonApp, IonRouterOutlet } from '@ionic/angular';
+import { afterNextRender, ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { RouterLink } from '@angular/router';
+import {
+  IonApp,
+  IonContent,
+  IonHeader,
+  IonIcon,
+  IonItem,
+  IonLabel,
+  IonList,
+  IonMenu,
+  IonRouterOutlet,
+  IonTitle,
+  IonToolbar,
+  MenuController,
+} from '@ionic/angular';
 
 @Component({
   selector: 'app-root',
-  template: `<ion-app><ion-router-outlet></ion-router-outlet></ion-app>`,
-  imports: [IonApp, IonRouterOutlet],
+  templateUrl: './app.component.html',
+  styleUrls: ['./app.component.scss'],
+  imports: [
+    RouterLink,
+    IonApp,
+    IonMenu,
+    IonHeader,
+    IonToolbar,
+    IonTitle,
+    IonContent,
+    IonList,
+    IonItem,
+    IonIcon,
+    IonLabel,
+    IonRouterOutlet,
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AppComponent {
+  private readonly menu = inject(MenuController);
+
   constructor() {
     afterNextRender(() => {
       const splash = document.getElementById('boot-splash');
@@ -21,5 +51,9 @@ export class AppComponent {
         window.setTimeout(() => splash.remove(), reduce ? 0 : 400);
       }, holdMs);
     });
+  }
+
+  closeMenu(): void {
+    void this.menu.close('main-menu');
   }
 }

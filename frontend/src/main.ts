@@ -12,6 +12,8 @@ import {
   refreshOutline,
   personOutline,
   timeOutline,
+  trophyOutline,
+  menuOutline,
 } from 'ionicons/icons';
 import { AppComponent } from './app/app.component';
 import { appConfig } from './app/app.config';
@@ -28,6 +30,8 @@ addIcons({
   refreshOutline,
   personOutline,
   timeOutline,
+  trophyOutline,
+  menuOutline,
 });
 
 bootstrapApplication(AppComponent, appConfig).catch((err) => console.error(err));
