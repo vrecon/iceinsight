@@ -1,20 +1,20 @@
-/* IceInsights visual system — paper, ink, ice. Not Ionic purple. */
+/* IceInsights visual system — cool white, ink, ice. Not parchment. */
 :root {
-  --paper: #f4efe6;
-  --ink: #1f1b16;
-  --ink-soft: #6f675e;
-  --line: #ddd4c8;
+  --paper: #ffffff;
+  --ink: #1a2226;
+  --ink-soft: #5a6770;
+  --line: #d5dee3;
   --ice: #2f6f7c;
   --ice-deep: #163f48;
-  --rest: #c8bfb3;
+  --rest: #9aa8b0;
 
-  --paper-rgb: 244, 239, 230;
+  --paper-rgb: 255, 255, 255;
   --ice-rgb: 47, 111, 124;
 
   --glass-blur: 18px;
   --glass-saturate: 1.55;
-  --chrome-glass: color-mix(in srgb, rgba(var(--paper-rgb), 0.58) 72%, rgba(var(--ice-rgb), 0.28));
-  --surface-glass: color-mix(in srgb, rgba(255, 255, 255, 0.46) 74%, rgba(var(--ice-rgb), 0.12));
+  --chrome-glass: color-mix(in srgb, rgba(var(--paper-rgb), 0.72) 70%, rgba(var(--ice-rgb), 0.28));
+  --surface-glass: color-mix(in srgb, rgba(255, 255, 255, 0.62) 74%, rgba(var(--ice-rgb), 0.12));
   --highlight-ice: rgba(var(--ice-rgb), 0.32);
 
   --space: 4px;
@@ -33,9 +33,9 @@
 
   --ion-font-family: var(--font-sans);
   --ion-background-color: var(--paper);
-  --ion-background-color-rgb: 244, 239, 230;
+  --ion-background-color-rgb: 255, 255, 255;
   --ion-text-color: var(--ink);
-  --ion-text-color-rgb: 31, 27, 22;
+  --ion-text-color-rgb: 26, 34, 38;
   --ion-border-color: var(--line);
   --ion-toolbar-background: transparent;
   --ion-toolbar-color: var(--ink);
@@ -47,24 +47,24 @@
 
   --ion-color-primary: #2f6f7c;
   --ion-color-primary-rgb: 47, 111, 124;
-  --ion-color-primary-contrast: #f4efe6;
-  --ion-color-primary-contrast-rgb: 244, 239, 230;
+  --ion-color-primary-contrast: #ffffff;
+  --ion-color-primary-contrast-rgb: 255, 255, 255;
   --ion-color-primary-shade: #163f48;
   --ion-color-primary-tint: #4a8793;
 
-  --ion-color-secondary: #6f675e;
-  --ion-color-secondary-rgb: 111, 103, 94;
-  --ion-color-secondary-contrast: #f4efe6;
-  --ion-color-secondary-contrast-rgb: 244, 239, 230;
-  --ion-color-secondary-shade: #5f5850;
-  --ion-color-secondary-tint: #7e776f;
+  --ion-color-secondary: #5a6770;
+  --ion-color-secondary-rgb: 90, 103, 112;
+  --ion-color-secondary-contrast: #ffffff;
+  --ion-color-secondary-contrast-rgb: 255, 255, 255;
+  --ion-color-secondary-shade: #4e5961;
+  --ion-color-secondary-tint: #6b767e;
 
-  --ion-color-tertiary: #8a8176;
+  --ion-color-tertiary: #6d7c84;
   --ion-color-success: #4d6b5c;
   --ion-color-warning: #9a7a3e;
   --ion-color-danger: #8c4a42;
-  --ion-color-medium: #6f675e;
-  --ion-color-light: #f4efe6;
+  --ion-color-medium: #5a6770;
+  --ion-color-light: #f7f9fa;
 }
 
 @media (prefers-reduced-transparency: reduce), (prefers-reduced-motion: reduce) {
