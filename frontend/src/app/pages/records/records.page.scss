@@ -23,6 +23,11 @@
   backdrop-filter: blur(12px) saturate(1.35);
 }
 
+.rit-row--static {
+  cursor: default;
+  pointer-events: none;
+}
+
 .rit-row-body {
   display: flex;
   flex-direction: column;
@@ -42,10 +47,20 @@
   color: var(--ink-soft);
 }
 
-.rit-row .chev {
-  color: var(--ink-soft);
-  font-size: 1.4rem;
-  line-height: 1;
+.rit-row .loc {
+  font-size: var(--type-meta-size);
+  color: var(--rest);
+}
+
+.rit-row .best {
+  flex: 0 0 auto;
+  font-size: 1.5rem;
+  font-weight: 560;
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum";
+  letter-spacing: -0.03em;
+  color: var(--ice);
+  line-height: 1.1;
 }
 
 @media (prefers-reduced-transparency: reduce), (prefers-reduced-motion: reduce) {

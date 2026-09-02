@@ -1,7 +1,9 @@
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import {
+  IonButtons,
   IonContent,
   IonHeader,
+  IonMenuButton,
   IonNote,
   IonSpinner,
   IonTitle,
@@ -22,6 +24,8 @@ import { EmptyStateComponent } from '../../shared/empty-state.component';
     IonHeader,
     IonToolbar,
     IonTitle,
+    IonButtons,
+    IonMenuButton,
     IonContent,
     IonNote,
     IonSpinner,

@@ -1,0 +1,11 @@
+.name {
+  margin: calc(var(--space) * 2) 0 calc(var(--space) * 8);
+  font-size: var(--type-title-size);
+  font-weight: var(--type-title-weight);
+  color: var(--ink);
+}
+
+ion-button {
+  --color: var(--ice);
+  margin-inline-start: calc(var(--space) * -2);
+}

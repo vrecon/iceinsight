@@ -1,23 +1,19 @@
-<ion-header>
+<ion-header [translucent]="true">
   <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button menu="main-menu" autoHide="false"></ion-menu-button>
+    </ion-buttons>
     <img class="toolbar-mark brand-mark" slot="start" src="assets/icon/ijsvogel.png" width="32" height="32" alt="IceInsights" />
     <ion-title>Chips</ion-title>
-    <ion-buttons slot="end">
-      <ion-button fill="clear" (click)="logout()">Uitloggen</ion-button>
-    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
+<ion-content [fullscreen]="true">
   <ion-refresher slot="fixed" (ionRefresh)="reload($event)">
     <ion-refresher-content></ion-refresher-content>
   </ion-refresher>
 
   <div class="page-pad">
-    @if (userName) {
-      <p class="muted">Ingelogd als {{ userName }}</p>
-    }
-
     <form [formGroup]="form" (ngSubmit)="link()" class="link-row">
       <ion-item>
         <ion-input
