@@ -5,7 +5,7 @@ const ACTIVITY = {
   name: 'PRACTICE',
   startTime: '2026-01-15T10:00:00',
   endTime: '2026-01-15T11:00:00',
-  locationId: 1,
+  locationId: 2497,
   chipId: 7,
   best1Duration: '32.1',
 };
@@ -76,7 +76,7 @@ async function mockApis(page: Page): Promise<void> {
   });
 }
 
-test('Ritten list opens native PRACTICE href to detail Ronden', async ({ page }) => {
+test('Ritten list opens native Thialf/date href to detail Ronden', async ({ page }) => {
   await mockApis(page);
   await page.addInitScript(() => {
     localStorage.setItem('iceinsights.accessToken', 'e2e');
@@ -87,7 +87,7 @@ test('Ritten list opens native PRACTICE href to detail Ronden', async ({ page })
   });
 
   await page.goto('/tabs/ritten');
-  await page.getByRole('link', { name: 'PRACTICE' }).click();
+  await page.getByRole('link', { name: /Thialf/ }).click();
   await expect(page).toHaveURL(/\/ritten\/42$/);
   await expect(page.getByRole('heading', { name: 'Ronden' }).or(page.getByText('Ronden'))).toBeVisible();
 });

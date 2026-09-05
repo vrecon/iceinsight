@@ -42,14 +42,20 @@
   color: var(--ink);
 }
 
-.rit-row .meta {
-  font-size: var(--type-meta-size);
-  color: var(--ink-soft);
+.rit-row .loc {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
 }
 
-.rit-row .loc {
-  font-size: var(--type-meta-size);
+.rit-row .loc .label {
   color: var(--rest);
+}
+
+.rit-row .loc-name {
+  font-size: var(--type-meta-size);
+  color: var(--ink-soft);
 }
 
 .rit-row .best {

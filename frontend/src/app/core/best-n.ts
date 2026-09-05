@@ -1,3 +1,7 @@
+import { ijsbaanName } from './ijsbanen';
+
+export { ijsbaanName };
+
 export const BEST_N = [1, 2, 4, 8, 13, 25, 50, 100] as const;
 export type BestN = (typeof BEST_N)[number];
 
@@ -65,9 +69,6 @@ export function displayDuration(value?: string | null): string {
   return value;
 }
 
-export function locationLabel(locationId?: number): string {
-  if (locationId === undefined || locationId === null) {
-    return 'Onbekende baan';
-  }
-  return `Baan #${locationId}`;
+export function locationLabel(locationId?: number | null): string {
+  return ijsbaanName(locationId);
 }
