@@ -15,7 +15,7 @@ import { ActivitySummary } from '../../api/models/activity-summary';
 import { ActivitiesService } from '../../api/services/activities.service';
 import { SyncService } from '../../api/services/sync.service';
 import { apiErrorMessage } from '../../core/api-error';
-import { displayDuration, formatDateTime, locationLabel } from '../../core/best-n';
+import { displayDuration, formatDateTime, ijsbaanName } from '../../core/best-n';
 import { EmptyStateComponent } from '../../shared/empty-state.component';
 
 @Component({
@@ -93,5 +93,5 @@ export class ActivitiesPage {
 
   formatDateTime = formatDateTime;
   displayDuration = displayDuration;
-  locationLabel = locationLabel;
+  ijsbaanName = ijsbaanName;
 }

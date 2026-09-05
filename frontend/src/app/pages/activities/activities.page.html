@@ -37,18 +37,22 @@
           @if (activity.id; as id) {
             <a class="rit-row" [attr.href]="'/ritten/' + id">
               <span class="rit-row-body">
-                <span class="name">{{ activity.name || ('Rit #' + id) }}</span>
-                <span class="meta" aria-hidden="true">{{ formatDateTime(activity.startTime) }}</span>
-                <span class="loc" aria-hidden="true">{{ locationLabel(activity.locationId) }}</span>
+                <span class="name">{{ formatDateTime(activity.startTime) }}</span>
+                <span class="loc">
+                  <span class="label">Ijsbaan</span>
+                  <span class="loc-name">{{ ijsbaanName(activity.locationId) }}</span>
+                </span>
               </span>
               <span class="best" aria-hidden="true">{{ displayDuration(activity.best1Duration) }}</span>
             </a>
           } @else {
             <div class="rit-row rit-row--static">
               <span class="rit-row-body">
-                <span class="name">{{ activity.name || 'Rit' }}</span>
-                <span class="meta">{{ formatDateTime(activity.startTime) }}</span>
-                <span class="loc">{{ locationLabel(activity.locationId) }}</span>
+                <span class="name">{{ formatDateTime(activity.startTime) }}</span>
+                <span class="loc">
+                  <span class="label">Ijsbaan</span>
+                  <span class="loc-name">{{ ijsbaanName(activity.locationId) }}</span>
+                </span>
               </span>
               <span class="best">{{ displayDuration(activity.best1Duration) }}</span>
             </div>
